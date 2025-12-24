@@ -1,8 +1,8 @@
-import LiveSubSimulator from '../core/LiveSubSimulator.js';
-import Player from '../core/Player.js';
-import Lineup from '../core/Lineup.js';
-import Optimizer from '../core/Optimizer.js';
-import StatsAggregator from '../core/StatsAggregator.js';
+import LiveSubSimulator from './core/LiveSubSimulator.js';
+import Player from './core/Player.js';
+import Lineup from './core/Lineup.js';
+import Optimizer from './core/Optimizer.js';
+import StatsAggregator from './core/StatsAggregator.js';
 import UIManager from './ui/UIManager.js';
 import rosterData from './data/roster.js';
 

@@ -451,18 +451,27 @@ export default class UIManager {
             card.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 e.dataTransfer.dropEffect = 'move';
-                if (!isEmpty) card.classList.add('bg-white/10');
+                if (!isEmpty) {
+                    card.classList.add('bg-white/10', 'border-accent-orange');
+                    card.classList.remove('border-transparent');
+                }
                 if (isEmpty) card.style.opacity = '1'; // Highlight empty target
             });
 
             card.addEventListener('dragleave', () => {
-                if (!isEmpty) card.classList.remove('bg-white/10');
+                if (!isEmpty) {
+                    card.classList.remove('bg-white/10', 'border-accent-orange');
+                    if (i >= 3) card.classList.add('border-transparent'); // Restore transparency if not top 3
+                }
                 if (isEmpty) card.style.opacity = '';
             });
 
             card.addEventListener('drop', (e) => {
                 e.preventDefault();
-                if (!isEmpty) card.classList.remove('bg-white/10');
+                if (!isEmpty) {
+                    card.classList.remove('bg-white/10', 'border-accent-orange');
+                    if (i >= 3) card.classList.add('border-transparent');
+                }
                 if (isEmpty) card.style.opacity = '';
 
                 const source = e.dataTransfer.getData('source');

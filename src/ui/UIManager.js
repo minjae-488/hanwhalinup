@@ -229,20 +229,35 @@ export default class UIManager {
         });
     }
 
-    renderRosterPool(rosterData) {
+    renderRosterPool(rosterData, excludedIds = []) {
         this.fullRoster = rosterData; // Store source for filtering
-        this.filterRoster('all');
+        this.excludedIds = new Set(excludedIds);
+
+        // Find current active filter
+        const activeBtn = this.dashboardContainer.querySelector('.filter-btn.active');
+        const filter = activeBtn ? activeBtn.dataset.filter : 'all';
+
+        this.filterRoster(filter);
     }
 
     filterRoster(category) {
         if (!this.fullRoster) return;
 
+        // Base Filter: Category
         let filtered = this.fullRoster;
         if (category !== 'all') {
-            filtered = this.fullRoster.filter(p => p.category === category);
+            filtered = filtered.filter(p => p.category === category);
         }
 
-        this.rosterContainer.innerHTML = '';
+        // Secondary Filter: Exclude players already in lineup
+        if (this.excludedIds) {
+            filtered = filtered.filter(p => !this.excludedIds.has(p.id));
+        }
+
+        const listEl = this.dashboardContainer.querySelector('#roster-pool-list');
+        if (!listEl) return;
+
+        listEl.innerHTML = '';
         filtered.forEach(player => {
             const card = document.createElement('div');
             card.draggable = true;

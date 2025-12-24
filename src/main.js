@@ -20,6 +20,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const ui = new UIManager();
 
     // Bind UI callbacks
+    const refreshUI = () => {
+        const usedIds = currentLineup.players.filter(p => p).map(p => p.id);
+        ui.renderRosterPool(rosterData, usedIds);
+        ui.renderLineup(currentLineup, 'current');
+    };
+
+    // Bind UI callbacks
     ui.onLineupReorder = (fromIndex, toIndex) => {
         // Swap players in current lineup
         const p1 = currentLineup.players[fromIndex];
@@ -28,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentLineup.players[toIndex] = p1;
 
         // Re-render
-        ui.renderLineup(currentLineup, 'current');
+        refreshUI();
     };
 
     ui.onPlayerReplace = (index, newPlayerId) => {
@@ -49,17 +56,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 currentLineup.players[index] = newPlayer;
             }
 
-            ui.renderLineup(currentLineup, 'current');
+            refreshUI();
         }
     };
 
     ui.onPlayerRemove = (index) => {
         currentLineup.players[index] = null; // Mark as empty
-        ui.renderLineup(currentLineup, 'current');
+        refreshUI();
     };
 
-    ui.renderRosterPool(rosterData);
-    ui.renderLineup(currentLineup, 'current'); // Will render initial view
+    refreshUI();
 
     // 3. Event Binding
     // 3. Event Binding

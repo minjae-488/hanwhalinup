@@ -488,11 +488,10 @@ export default class UIManager {
             if (isEmpty) {
                 card.innerHTML = `
                     <div class="flex flex-col items-center justify-center w-6">
-                        <span class="text-gray-500 text-xs font-bold">${i + 1}</span>
+                        <span class="text-gray-600 text-xs font-bold">${i + 1}</span>
                     </div>
-                    <div class="flex-1 text-center py-3 border-2 border-dashed border-gray-600/50 rounded-lg flex items-center justify-center gap-2">
-                        <span class="material-symbols-outlined text-gray-500">add_circle</span>
-                        <span class="text-gray-500 text-xs font-bold">${i + 1}번 타자 (미배정)</span>
+                    <div class="flex-1 h-full min-h-[3rem] flex items-center justify-center border-2 border-dashed border-gray-700/50 rounded-lg bg-black/20">
+                        <span class="text-gray-600 text-sm font-bold tracking-widest">${i + 1}번 타순</span>
                     </div>
                 `;
             } else {

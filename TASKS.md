@@ -4,6 +4,10 @@
 - [ ] **Git 설정**
     - [ ] Git 저장소 초기화 및 `.gitignore` 생성.
     - [ ] 초기 커밋 (디자인 파일, PRD, TECH_SPEC, PROJECT_RULES).
+- [ ] **데이터 파이프라인 설정 (New)**
+    - [ ] Python 환경 설정 (requirements.txt: beautifulsoup4, selenium 등).
+    - [ ] `scripts/crawl_data.py`: Statiz 데이터 크롤러 구현.
+    - [ ] `scripts/process_data.py`: 전처리 로직 구현 및 JSON 수출.
 - [ ] **환경 설정**
     - [ ] `package.json` 초기화 (`npm init -y`).
     - [ ] **개발 의존성 설치**: `jest` (테스트), `prettier` (포맷팅).
@@ -49,9 +53,10 @@
     - [ ] 테스트: 게임 결과 배열로부터 평균(기대 득점)과 승률 계산.
     - [ ] 구현: 통계 집계 로직.
 - [ ] **Optimizer** (`src/core/Optimizer.js`):
-    - [ ] 테스트: `generatePermutations()`이 유니크한 라인업 조합을 생성하는지 확인.
-    - [ ] 테스트: 평가 루프가 조합당 N번의 시뮬레이션을 실행하는지 확인.
-    - [ ] 구현: 최적화 전략 (랜덤 샘플링 vs 휴리스틱).
+    - [ ] Test: `GeneticAlgorithm` 초기 세대 생성 로직 확인.
+    - [ ] Test: 교차(Crossover) 및 변이(Mutation) 동작 검증.
+    - [ ] Test: 세대 반복 시 Fitness(득점)가 증가하는 경향 확인.
+    - [ ] 구현: 유전 알고리즘 기반 최적화 엔진.
 
 ## 3단계: UI 구현 및 연동 (Phase 3)
 *이 단계는 TDD가 적용되지 않으며, 자동화 테스트 대신 수동 테스트로 검증합니다.*

@@ -34,9 +34,17 @@
   - Core Logic(Engine, Optimizer)은 Jest로 단위 테스트 수행.
   - UI 로직은 자동화 테스트를 수행하지 않고 수동 검증 진행.
 
-## 4. 데이터 모델 (Data Models)
+## 4. 데이터 모델 및 파이프라인 (Data Models & Pipeline)
 
-### 4.1. Player (선수)
+### 4.1. 데이터 수집 및 전처리 (Python Crawler)
+- **도구**: Python (BeautifulSoup, Selenium).
+- **대상**: Statiz (Primary), KBO 기록실 (Secondary).
+- **프로세스**:
+  1.  **Collection**: 선수별 시즌 상세 기록(타석, 안타, 2루타 등) 크롤링.
+  2.  **Preprocessing**: 시뮬레이션 확률(`P(Event)`) 계산 및 정규화.
+  3.  **Output**: `src/data/players_data.json` 파일 생성.
+
+### 4.2. Player 모델 (JSON / JS Object)
 ```json
 {
   "id": "player_001",
@@ -47,14 +55,23 @@
     "avg": 0.298,
     "obp": 0.380,
     "slg": 0.540,
-    "hr": 31
-    // 시뮬레이션용 상세 확률 (1루타, 2루타, 3루타, 볼넷, 삼진, 범타 등)
+    "ops": 0.920,
+    "probability": {
+      "single": 0.15,
+      "double": 0.05,
+      "triple": 0.005,
+      "homerun": 0.04,
+      "walk": 0.08,
+      "strikeout": 0.20,
+      "groundout": 0.30,
+      "flyout": 0.175
+    }
   },
   "condition": "hot" // 컨디션 상태
 }
 ```
 
-### 4.2. SimulationResult (결과)
+### 4.3. SimulationResult (결과)
 ```json
 {
   "lineupId": "opt_20240501",
@@ -80,9 +97,12 @@
 
 ### 5.2. Optimizer (`optimizer.js`)
 - **목표**: 주어진 선수단(9명)의 순서를 섞어 기대 득점이 가장 높은 타순 발견.
-- **전략 (MVP)**:
-  - **Random Sampling**: 9!(362,880) 전체 탐색은 불가하므로, 약 1,000~5,000개의 무작위 타순을 생성하여 평가.
-  - **Heuristic**: "강한 타자를 1, 2, 4번에 배치" 하는 등 야구 이론 기반의 가중치 부여 방식 혼합 가능.
+- **알고리즘 (Genetic Algorithm)**:
+  - **초기화**: 랜덤 라인업 50개 생성.
+  - **평가**: 각 라인업의 기대 득점 계산(몬테카를로 100회).
+  - **선택**: 상위 20% 우수 유전자 보존.
+  - **교차/변이**: 타순 교환(Swap) 및 뒤섞기(Shuffle)로 다음 세대 생성.
+  - **반복**: 10~20세대 진화 후 최적해 도출.
 
 ### 5.3. UI Controller (`ui.js`)
 - **Field Visualizer**: CSS Transform 및 Absolute positioning을 사용하여 다이아몬드 필드 및 수비 위치 렌더링.

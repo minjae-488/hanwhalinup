@@ -63,7 +63,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 3. Event Binding
     // 3. Event Binding
-    // Helper to bind multiple buttons
     const bindClick = (ids, handler) => {
         ids.forEach(id => {
             const el = document.getElementById(id);
@@ -81,45 +80,40 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         ui.setLoading(true);
 
-        // Use setTimeout to allow UI to update (show loading)
         setTimeout(async () => {
             try {
-                const optimizer = new Optimizer(currentLineup);
-                console.time('Optimization');
+                // Dynamic import to keep main bundle clean
+                const GameSimulator = (await import('./core/GameSimulator.js')).default;
+                const StatsAggregator = (await import('./core/StatsAggregator.js')).default;
 
-                // Config for speed demo
-                optimizedLineup = await optimizer.optimize({
-                    generations: 20,
-                    populationSize: 50,
-                    simulationsPerLineup: 50
-                });
+                const SIM_GAMES = 1000;
+                const simulator = new GameSimulator();
+                const aggregator = new StatsAggregator();
 
-                console.timeEnd('Optimization');
+                // Run Simulations
+                for (let i = 0; i < SIM_GAMES; i++) {
+                    const result = simulator.simulateGame(currentLineup);
+                    aggregator.addGameResult(result);
+                }
 
-                // Evaluate Result
-                const simCurrent = await optimizer.evaluateFitness(currentLineup, 200);
-                const simOptimized = await optimizer.evaluateFitness(optimizedLineup, 200);
+                const stats = aggregator.getAggregateStats();
 
-                // Update UI
+                // Render Result
                 ui.renderResults({
-                    currentRun: simCurrent,
-                    optimizedRun: simOptimized,
-                    winRate: 60.5
+                    currentRun: stats.avgRuns,
+                    winRate: (stats.winRate * 100).toFixed(1)
                 });
-                ui.renderLineup(optimizedLineup, 'optimized');
 
             } catch (e) {
-                console.error(e);
-                alert('Optimization failed execution.');
+                console.error("Simulation failed:", e);
+                alert('시뮬레이션 중 오류가 발생했습니다.');
             } finally {
                 ui.setLoading(false);
-                buttons.forEach(b => b.disabled = false);
             }
         }, 100);
     };
 
-    bindClick(['btn-rerun', 'btn-rerun-mobile'], handleRerun);
-    bindClick(['btn-apply', 'btn-apply-mobile'], () => alert('Lineup applied! (Mock)'));
+    bindClick(['btn-rerun', 'btn-rerun-mobile'], handleSimulation);
 
     const btnLiveSim = document.getElementById('btn-live-sim');
 

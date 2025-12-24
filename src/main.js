@@ -20,10 +20,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const ui = new UIManager();
 
     // Bind UI callbacks
-    const refreshUI = () => {
+    const refreshUI = (flashIndex = -1) => {
         const usedIds = currentLineup.players.filter(p => p).map(p => p.id);
         ui.renderRosterPool(rosterData, usedIds);
-        ui.renderLineup(currentLineup, 'current');
+        ui.renderLineup(currentLineup, 'current', flashIndex);
     };
 
     // Bind UI callbacks
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentLineup.players[toIndex] = p1;
 
         // Re-render
-        refreshUI();
+        refreshUI(toIndex); // Flash the "Target" of drag
     };
 
     ui.onPlayerReplace = (index, newPlayerId) => {
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 currentLineup.players[index] = newPlayer;
             }
 
-            refreshUI();
+            refreshUI(index); // Pass index to trigger Flash Effect
         }
     };
 

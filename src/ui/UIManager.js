@@ -213,13 +213,20 @@ export default class UIManager {
             e.preventDefault();
             rosterZone.classList.remove('border-accent-orange', 'bg-white/5');
 
-            const source = e.dataTransfer.getData('source');
-            if (source === 'lineup') {
-                const index = parseInt(e.dataTransfer.getData('index'));
-                // Player dragged FROM lineup TO roster pool -> Remove from Lineup
-                if (this.onPlayerRemove) {
-                    this.onPlayerRemove(index);
+            try {
+                const rawData = e.dataTransfer.getData('text/plain');
+                if (!rawData) return;
+
+                const data = JSON.parse(rawData);
+                if (data.source === 'lineup') {
+                    const index = data.index;
+                    // Player dragged FROM lineup TO roster pool -> Remove from Lineup
+                    if (this.onPlayerRemove) {
+                        this.onPlayerRemove(index);
+                    }
                 }
+            } catch (err) {
+                console.error('Roster Drop Error:', err);
             }
         });
     }
@@ -280,8 +287,11 @@ export default class UIManager {
 
             // Drag Events
             card.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('player-id', player.id); // Custom type
-                e.dataTransfer.setData('source', 'roster');
+                const payload = JSON.stringify({
+                    source: 'roster',
+                    playerId: player.id
+                });
+                e.dataTransfer.setData('text/plain', payload);
                 e.dataTransfer.effectAllowed = 'move';
                 card.classList.add('opacity-50');
             });
@@ -439,9 +449,13 @@ export default class UIManager {
 
             // Drag Handlers
             card.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('index', i);
-                e.dataTransfer.setData('source', 'lineup');
-                if (!isEmpty) e.dataTransfer.setData('player-id', player.id);
+                const payload = {
+                    source: 'lineup',
+                    index: i
+                };
+                if (!isEmpty) payload.playerId = player.id;
+
+                e.dataTransfer.setData('text/plain', JSON.stringify(payload));
                 e.dataTransfer.effectAllowed = 'move';
                 setTimeout(() => card.classList.add('opacity-50'), 0);
             });
@@ -474,13 +488,21 @@ export default class UIManager {
                 }
                 if (isEmpty) card.style.opacity = '';
 
-                const source = e.dataTransfer.getData('source');
-                if (source === 'lineup') {
-                    const fromIndex = parseInt(e.dataTransfer.getData('index'));
-                    if (fromIndex !== i && this.onLineupReorder) this.onLineupReorder(fromIndex, i);
-                } else if (source === 'roster') {
-                    const playerId = e.dataTransfer.getData('player-id');
-                    if (this.onPlayerReplace) this.onPlayerReplace(i, playerId);
+                try {
+                    const rawData = e.dataTransfer.getData('text/plain');
+                    if (!rawData) return;
+
+                    const data = JSON.parse(rawData);
+
+                    if (data.source === 'lineup') {
+                        const fromIndex = data.index;
+                        if (fromIndex !== i && this.onLineupReorder) this.onLineupReorder(fromIndex, i);
+                    } else if (data.source === 'roster') {
+                        const playerId = data.playerId;
+                        if (this.onPlayerReplace) this.onPlayerReplace(i, playerId);
+                    }
+                } catch (err) {
+                    console.error('Drop parse error:', err);
                 }
             });
 

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html class="dark" lang="ko">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Hanwha Eagles Lineup Optimizer</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&amp;family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "primary-dark": "#0b5ec2",
+                        "accent-orange": "#f37321",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111a22",
+                        "surface-dark": "#233648",
+                        "surface-darker": "#1a2633",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "Noto Sans KR", "sans-serif"],
+                        "body": ["Noto Sans KR", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white overflow-x-hidden antialiased pb-24">
+    <!-- Top App Bar -->
+    <div class="sticky top-0 z-50 flex items-center bg-background-dark/95 backdrop-blur-sm p-4 pb-3 justify-between border-b border-white/5">
+        <div class="flex items-center gap-3">
+            <button class="text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+                <span class="material-symbols-outlined text-[24px]">menu</span>
+            </button>
+            <div class="flex flex-col">
+                <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Hanwha Eagles</h2>
+                <span class="text-xs text-gray-400 font-medium">Lineup Optimizer v1.0</span>
+            </div>
+        </div>
+        <div class="flex items-center justify-end gap-2">
+            <div class="size-10 rounded-full bg-gradient-to-br from-accent-orange to-red-600 p-[2px]">
+                <div class="size-full rounded-full bg-surface-dark flex items-center justify-center">
+                    <span class="material-symbols-outlined text-white text-[20px]">person</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex flex-col w-full max-w-md mx-auto relative app-container">
+        <!-- Dashboard Content will be injected here by UIManager -->
+        <div id="dashboard-view" class="px-4 py-6 text-center text-gray-500">
+            Initializing System...
+        </div>
+    </main>
+
+    <!-- Bottom Action Bar -->
+    <div class="fixed bottom-0 left-0 right-0 p-4 bg-background-dark/80 backdrop-blur-md border-t border-white/5 z-50">
+        <div class="flex gap-3 max-w-md mx-auto">
+            <button id="btn-rerun" class="flex-1 bg-surface-dark hover:bg-surface-darker text-white font-bold py-3 px-4 rounded-xl border border-white/10 transition-colors flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[20px]">refresh</span>
+                Rerun
+            </button>
+            <button id="btn-apply" class="flex-[2] bg-primary hover:bg-primary-dark text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-primary/20 transition-colors flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[20px]">check</span>
+                Apply
+            </button>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>

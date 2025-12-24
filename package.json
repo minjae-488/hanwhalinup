@@ -1,0 +1,23 @@
+{
+  "name": "hanwhalinup",
+  "version": "1.0.0",
+  "description": "Hanwha Eagles Lineup Optimizer with Monte Carlo Simulation",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "start": "npx live-server ."
+  },
+  "keywords": [
+    "baseball",
+    "simulation",
+    "monte-carlo",
+    "hanwha-eagles"
+  ],
+  "author": "Antigravity",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "prettier": "^3.2.5"
+  }
+}

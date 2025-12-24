@@ -102,7 +102,16 @@ cd hanwhalinup
 # 3. 의존성 설치 (테스트 실행용)
 npm install
 
-# 4. 테스트 실행
+### 3. Data Pipeline Setup (Issue #9)
+To update player data from Python crawler:
+```bash
+cd data_pipeline
+# (Optional) pip install pandas requests beautifulsoup4
+python crawl_and_process.py
+```
+This will regenerate `src/data/roster.js`.
+
+## 4. Testing
 npm test
 
 # 5. 실행 (로컬 서버 권장)

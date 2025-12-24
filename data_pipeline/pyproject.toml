@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "hanwhalinup-data-crawler"
+version = "0.1.0"
+description = "Crawls KBO stats for Hanwha Eagles Lineup Optimizer"
+authors = ["Antigravity"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+beautifulsoup4 = "^4.12.3"
+requests = "^2.31.0"
+pandas = "^2.2.0"
+lxml = "^5.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

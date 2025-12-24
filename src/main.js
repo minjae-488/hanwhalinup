@@ -11,11 +11,39 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('Hanwha Eagles Optimizer initializing...');
 
     // 1. Data Ingestion
-    const players = rosterData.map(p => new Player(p.id, p.name, p.position, p.hand, p.stats, p.category)); // Ensure category is passed
-    // Valid Lineup must be exactly 9 players. We take the first 9 from the roster as default.
-    const currentLineup = new Lineup(players.slice(0, 9));
+    const players = rosterData.map(p => new Player(p.id, p.name, p.position, p.hand, p.stats, p.category));
 
-    // 2. Setup UI
+    // Load saved lineup from localStorage or create empty lineup
+    const loadLineup = () => {
+        try {
+            const saved = localStorage.getItem('hanwha-lineup');
+            if (saved) {
+                const savedIds = JSON.parse(saved);
+                const loadedPlayers = savedIds.map(id => {
+                    if (id === null) return null;
+                    const config = rosterData.find(p => p.id === id);
+                    return config ? new Player(config.id, config.name, config.position, config.hand, config.stats, config.category) : null;
+                });
+                return new Lineup(loadedPlayers);
+            }
+        } catch (e) {
+            console.error('Failed to load lineup:', e);
+        }
+        // Return empty lineup (all null)
+        return new Lineup(Array(9).fill(null));
+    };
+
+    const saveLineup = (lineup) => {
+        try {
+            const ids = lineup.players.map(p => p ? p.id : null);
+            localStorage.setItem('hanwha-lineup', JSON.stringify(ids));
+        } catch (e) {
+            console.error('Failed to save lineup:', e);
+        }
+    };
+
+    const currentLineup = loadLineup();
+
     // 2. Setup UI
     const ui = new UIManager();
 
@@ -24,6 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const usedIds = currentLineup.players.filter(p => p).map(p => p.id);
         ui.renderRosterPool(rosterData, usedIds);
         ui.renderLineup(currentLineup, 'current', flashIndex);
+        saveLineup(currentLineup); // Save after every change
     };
 
     // Bind UI callbacks
@@ -64,6 +93,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     ui.onPlayerRemove = (index) => {
         currentLineup.players[index] = null; // Mark as empty
         refreshUI();
+    };
+
+    // Reset button handler
+    ui.onResetLineup = () => {
+        if (confirm('라인업을 초기화하시겠습니까?\n모든 선수가 타순에서 제외됩니다.')) {
+            for (let i = 0; i < 9; i++) {
+                currentLineup.players[i] = null;
+            }
+            refreshUI();
+        }
     };
 
     refreshUI();
@@ -123,6 +162,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     bindClick(['btn-rerun', 'btn-rerun-mobile'], handleSimulation);
+
+    // Bind Reset Button
+    const btnReset = document.getElementById('btn-reset');
+    if (btnReset && ui.onResetLineup) {
+        btnReset.addEventListener('click', ui.onResetLineup);
+    }
 
     const btnLiveSim = document.getElementById('btn-live-sim');
 

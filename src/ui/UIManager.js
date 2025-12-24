@@ -49,6 +49,10 @@ export default class UIManager {
                     
                     <!-- Desktop Action Buttons -->
                     <div class="hidden md:flex gap-3">
+                         <button id="btn-reset" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2 cursor-pointer">
+                            <span class="material-symbols-outlined text-[20px]">refresh</span>
+                            초기화
+                        </button>
                          <button id="btn-rerun" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-6 rounded-xl shadow-lg shadow-primary/20 transition-colors flex items-center justify-center gap-2 cursor-pointer w-full md:w-auto">
                             <span class="material-symbols-outlined text-[20px]">play_arrow</span>
                             분석 실행

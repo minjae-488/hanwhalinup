@@ -1,14 +1,21 @@
-// Helper to aggregate stats
 export default class StatsAggregator {
-    static aggregate(results) {
-        if (!results || results.length === 0) return { expectedRuns: 0, winRate: 0 };
+    constructor() {
+        this.results = [];
+    }
 
-        const totalRuns = results.reduce((sum, r) => sum + r.score, 0);
-        const winCount = results.filter(r => r.isWin).length;
+    addGameResult(result) {
+        this.results.push(result);
+    }
+
+    getAggregateStats() {
+        if (this.results.length === 0) return { avgRuns: 0, winRate: 0 };
+
+        const totalRuns = this.results.reduce((sum, r) => sum + r.score, 0);
+        const winCount = this.results.filter(r => r.isWin).length;
 
         return {
-            expectedRuns: totalRuns / results.length,
-            winRate: (winCount / results.length) * 100
+            avgRuns: totalRuns / this.results.length,
+            winRate: winCount / this.results.length
         };
     }
 }

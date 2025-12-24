@@ -94,12 +94,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const StatsAggregator = (await import('./core/StatsAggregator.js')).default;
 
                 const SIM_GAMES = 1000;
-                const simulator = new GameSimulator();
+                // GameSimulator expects lineup in constructor
+                const simulator = new GameSimulator(currentLineup);
                 const aggregator = new StatsAggregator();
 
                 // Run Simulations
                 for (let i = 0; i < SIM_GAMES; i++) {
-                    const result = simulator.simulateGame(currentLineup);
+                    // simulateGame() uses the lineup passed to constructor
+                    const result = simulator.simulateGame();
                     aggregator.addGameResult(result);
                 }
 

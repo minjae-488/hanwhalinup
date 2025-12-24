@@ -49,16 +49,37 @@ export default class UIManager {
                 <!-- Desktop Grid Layout -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     
-                    <!-- Left Column: Lineup List (lg:col-span-5) -->
-                    <div class="lg:col-span-5 flex flex-col gap-4 order-2 lg:order-1">
+                    <!-- LEFT COLUMN (NEW): Roster Pool (lg:col-span-3) -->
+                    <div class="lg:col-span-3 flex flex-col gap-4 order-3 lg:order-1 bg-surface-dark rounded-xl p-4 border border-white/5 h-[800px] overflow-hidden">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-white text-sm font-bold uppercase tracking-wider">Roster</h3>
+                             <span class="text-[10px] text-gray-500">Drag to Swap</span>
+                        </div>
+                        
+                        <!-- Filters -->
+                        <div class="flex gap-1 flex-wrap">
+                            <button class="filter-btn active text-[10px] uppercase bg-white text-black px-2 py-1 rounded font-bold transition-colors" data-filter="all">All</button>
+                            <button class="filter-btn text-[10px] uppercase bg-surface-darker text-gray-400 hover:text-white px-2 py-1 rounded font-medium border border-white/10 transition-colors" data-filter="Infielder">INF</button>
+                            <button class="filter-btn text-[10px] uppercase bg-surface-darker text-gray-400 hover:text-white px-2 py-1 rounded font-medium border border-white/10 transition-colors" data-filter="Outfielder">OF</button>
+                            <button class="filter-btn text-[10px] uppercase bg-surface-darker text-gray-400 hover:text-white px-2 py-1 rounded font-medium border border-white/10 transition-colors" data-filter="Catcher">C</button>
+                             <button class="filter-btn text-[10px] uppercase bg-surface-darker text-gray-400 hover:text-white px-2 py-1 rounded font-medium border border-white/10 transition-colors" data-filter="Pitcher">P</button>
+                        </div>
+
+                        <div id="roster-pool-list" class="flex flex-col gap-2 overflow-y-auto custom-scrollbar flex-1 pb-4">
+                            <!-- Draggable Players injected here -->
+                        </div>
+                    </div>
+
+                    <!-- CENTER COLUMN: Lineup List (lg:col-span-4) -->
+                    <div class="lg:col-span-4 flex flex-col gap-4 order-2 lg:order-2">
                          <div class="flex flex-col gap-2">
                             <h3 class="text-white text-sm font-bold uppercase tracking-wider mb-2 ml-1">Batting Order (1-9)</h3>
                             <div id="batting-order-list" class="flex flex-col gap-2 max-h-[800px] overflow-y-auto pr-1"></div>
                         </div>
                     </div>
 
-                    <!-- Right Column: Stats & Field & Live Sim (lg:col-span-7) -->
-                    <div class="lg:col-span-7 flex flex-col gap-6 order-1 lg:order-2">
+                    <!-- RIGHT COLUMN: Stats & Field & Live Sim (lg:col-span-5) -->
+                    <div class="lg:col-span-5 flex flex-col gap-6 order-1 lg:order-3">
                         
                         <!-- Stats Cards -->
                         <div class="grid grid-cols-2 gap-4">
@@ -154,9 +175,74 @@ export default class UIManager {
 
         // Refresh references after innerHTML set
         this.lineupContainer = document.getElementById('batting-order-list');
+        this.rosterContainer = document.getElementById('roster-pool-list');
         this.winRateEl = document.getElementById('stat-win-rate');
         this.expRunsEl = document.getElementById('stat-exp-runs');
         this.statusBadge = document.getElementById('status-badge');
+
+        // Init Filters
+        this.setupFilters();
+    }
+
+    setupFilters() {
+        const buttons = this.dashboardContainer.querySelectorAll('.filter-btn');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Style toggle
+                buttons.forEach(b => {
+                    b.classList.remove('bg-white', 'text-black', 'active');
+                    b.classList.add('bg-surface-darker', 'text-gray-400');
+                });
+                btn.classList.remove('bg-surface-darker', 'text-gray-400');
+                btn.classList.add('bg-white', 'text-black', 'active');
+
+                // Filter Logic
+                const filter = btn.dataset.filter;
+                this.filterRoster(filter);
+            });
+        });
+    }
+
+    renderRosterPool(rosterData) {
+        this.fullRoster = rosterData; // Store source for filtering
+        this.filterRoster('all');
+    }
+
+    filterRoster(category) {
+        if (!this.fullRoster) return;
+
+        let filtered = this.fullRoster;
+        if (category !== 'all') {
+            filtered = this.fullRoster.filter(p => p.category === category);
+        }
+
+        this.rosterContainer.innerHTML = '';
+        filtered.forEach(player => {
+            const card = document.createElement('div');
+            card.draggable = true;
+            card.className = "flex items-center gap-3 bg-surface-darker p-2 rounded-lg border border-white/5 hover:border-accent-orange cursor-grab active:cursor-grabbing transition-colors group";
+            card.dataset.playerId = player.id;
+
+            // Drag Events
+            card.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('player-id', player.id); // Custom type
+                e.dataTransfer.setData('source', 'roster');
+                e.dataTransfer.effectAllowed = 'copy';
+                card.classList.add('opacity-50');
+            });
+            card.addEventListener('dragend', () => card.classList.remove('opacity-50'));
+
+            card.innerHTML = `
+                <div class="size-8 rounded-full bg-gray-700 flex items-center justify-center text-[10px] text-gray-400 font-bold shrink-0 group-hover:bg-accent-orange group-hover:text-white transition-colors">
+                    ${player.position}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-white text-xs font-bold truncate">${player.name}</p>
+                    <p class="text-gray-500 text-[10px]">${player.category} • Avg ${player.stats.avg.toFixed(3)}</p>
+                </div>
+            `;
+            this.rosterContainer.appendChild(card);
+        });
     }
 
     setLoading(isLoading) {

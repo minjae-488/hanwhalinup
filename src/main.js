@@ -15,7 +15,44 @@ document.addEventListener('DOMContentLoaded', async () => {
     const currentLineup = new Lineup(players);
 
     // 2. Setup UI
+    // 2. Setup UI
     const ui = new UIManager();
+
+    // Bind UI callbacks
+    ui.onLineupReorder = (fromIndex, toIndex) => {
+        // Swap players in current lineup
+        const p1 = currentLineup.players[fromIndex];
+        const p2 = currentLineup.players[toIndex];
+        currentLineup.players[fromIndex] = p2;
+        currentLineup.players[toIndex] = p1;
+
+        // Re-render
+        ui.renderLineup(currentLineup, 'current');
+    };
+
+    ui.onPlayerReplace = (index, newPlayerId) => {
+        const newPlayerConfig = rosterData.find(p => p.id === newPlayerId);
+        if (newPlayerConfig) {
+            const newPlayer = new Player(newPlayerConfig.id, newPlayerConfig.name, newPlayerConfig.position, newPlayerConfig.hand, newPlayerConfig.stats);
+            newPlayer.category = newPlayerConfig.category; // Simple property
+
+            // Check if player is already in lineup
+            const exists = currentLineup.players.findIndex(p => p.id === newPlayer.id);
+            if (exists !== -1) {
+                // If exists, swap the two positions
+                const temp = currentLineup.players[index];
+                currentLineup.players[index] = currentLineup.players[exists];
+                currentLineup.players[exists] = temp;
+            } else {
+                // Replace
+                currentLineup.players[index] = newPlayer;
+            }
+
+            ui.renderLineup(currentLineup, 'current');
+        }
+    };
+
+    ui.renderRosterPool(rosterData); // Init Roster Panel
     ui.renderLineup(currentLineup, 'current'); // Will render initial view
 
     // 3. Event Binding

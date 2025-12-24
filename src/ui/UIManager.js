@@ -1,6 +1,6 @@
 export default class UIManager {
     constructor() {
-        this.dashboardContainer = document.getElementById('dashboard-container');
+        this.dashboardContainer = document.getElementById('dashboard-view');
         // Inject Styles for Animation
         const style = document.createElement('style');
         style.textContent = `

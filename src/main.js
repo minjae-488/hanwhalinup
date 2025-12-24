@@ -11,8 +11,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('Hanwha Eagles Optimizer initializing...');
 
     // 1. Data Ingestion
-    const players = rosterData.map(p => new Player(p.id, p.name, p.position, p.hand, p.stats));
-    const currentLineup = new Lineup(players);
+    const players = rosterData.map(p => new Player(p.id, p.name, p.position, p.hand, p.stats, p.category)); // Ensure category is passed
+    // Valid Lineup must be exactly 9 players. We take the first 9 from the roster as default.
+    const currentLineup = new Lineup(players.slice(0, 9));
 
     // 2. Setup UI
     // 2. Setup UI

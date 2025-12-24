@@ -348,9 +348,16 @@ export default class UIManager {
     }
 
     generateFieldHTML(lineup) {
-        const getPlayer = (pos) => lineup.players.find(p => p.position === pos) || { name: ' Vacant' };
+        // Safe find: Check if 'p' exists before accessing position
+        const getPlayer = (pos) => lineup.players.find(p => p && p.position === pos) || { name: ' Vacant' };
+
         const getName = (pos) => {
             const p = getPlayer(pos);
+            if (p.name === ' Vacant') return ''; // Return empty string if vacant
+
+            // Format name (e.g. "Choi Jae-hoon" -> "Jae-hoon" or full name if short)
+            // For Korean, just use full name usually, or as logic dictates.
+            // Existing logic splits by space.
             const parts = p.name.split(' ');
             return parts.length > 1 ? parts[1] : p.name;
         };

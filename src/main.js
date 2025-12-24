@@ -34,18 +34,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     ui.onPlayerReplace = (index, newPlayerId) => {
         const newPlayerConfig = rosterData.find(p => p.id === newPlayerId);
         if (newPlayerConfig) {
-            const newPlayer = new Player(newPlayerConfig.id, newPlayerConfig.name, newPlayerConfig.position, newPlayerConfig.hand, newPlayerConfig.stats);
-            newPlayer.category = newPlayerConfig.category; // Simple property
+            const newPlayer = new Player(newPlayerConfig.id, newPlayerConfig.name, newPlayerConfig.position, newPlayerConfig.hand, newPlayerConfig.stats, newPlayerConfig.category);
 
             // Check if player is already in lineup
-            const exists = currentLineup.players.findIndex(p => p.id === newPlayer.id);
-            if (exists !== -1) {
-                // If exists, swap the two positions
+            const existingIndex = currentLineup.players.findIndex(p => p && p.id === newPlayer.id);
+
+            if (existingIndex !== -1) {
+                // Swap
                 const temp = currentLineup.players[index];
-                currentLineup.players[index] = currentLineup.players[exists];
-                currentLineup.players[exists] = temp;
+                currentLineup.players[index] = currentLineup.players[existingIndex];
+                currentLineup.players[existingIndex] = temp;
             } else {
-                // Replace
+                // Insert
                 currentLineup.players[index] = newPlayer;
             }
 
@@ -53,7 +53,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    ui.renderRosterPool(rosterData); // Init Roster Panel
+    ui.onPlayerRemove = (index) => {
+        currentLineup.players[index] = null; // Mark as empty
+        ui.renderLineup(currentLineup, 'current');
+    };
+
+    ui.renderRosterPool(rosterData);
     ui.renderLineup(currentLineup, 'current'); // Will render initial view
 
     // 3. Event Binding

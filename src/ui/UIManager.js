@@ -360,29 +360,37 @@ export default class UIManager {
 
         this.lineupContainer.innerHTML = '';
 
-        lineup.players.forEach((player, index) => {
-            const isHighlight = index < 3; // Highlight top 3
+        // Ensure we always render 9 slots, even if empty
+        const slots = 9;
+
+        for (let i = 0; i < slots; i++) {
+            const player = lineup.players[i];
+            const isHighlight = i < 3;
 
             const card = document.createElement('div');
-            card.className = `flex items-center gap-4 bg-surface-dark p-3 rounded-lg border-l-4 ${isHighlight ? 'border-accent-orange' : 'border-transparent'} transition-colors cursor-grab active:cursor-grabbing hover:bg-white/5`;
+            // If empty slot, different styling
+            const isEmpty = !player;
 
-            // Enable Drag
+            card.className = `flex items-center gap-4 p-3 rounded-lg border-l-4 transition-colors cursor-grab active:cursor-grabbing hover:bg-white/5 ${isEmpty ? 'bg-surface-darker border-gray-700 border-dashed' : 'bg-surface-dark ' + (isHighlight ? 'border-accent-orange' : 'border-transparent')}`;
+
             card.draggable = true;
-            card.dataset.index = index;
+            card.dataset.index = i; // Slot index
 
-            // Reorder Drag Events
+            // Drag Events
             card.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('index', index);
+                e.dataTransfer.setData('index', i);
                 e.dataTransfer.setData('source', 'lineup');
+                if (!isEmpty) {
+                    e.dataTransfer.setData('player-id', player.id); // Also allow moving back to roster? 
+                }
                 e.dataTransfer.effectAllowed = 'move';
-                setTimeout(() => card.classList.add('opacity-20'), 0);
+                setTimeout(() => card.classList.add('opacity-50'), 0);
             });
 
-            card.addEventListener('dragend', () => card.classList.remove('opacity-20'));
+            card.addEventListener('dragend', () => card.classList.remove('opacity-50'));
 
-            // Drop Zone Logic
             card.addEventListener('dragover', (e) => {
-                e.preventDefault(); // Allow drop
+                e.preventDefault();
                 e.dataTransfer.dropEffect = 'move';
                 card.classList.add('bg-white/10');
             });
@@ -398,42 +406,65 @@ export default class UIManager {
                 const source = e.dataTransfer.getData('source');
 
                 if (source === 'lineup') {
-                    // Reorder
                     const fromIndex = parseInt(e.dataTransfer.getData('index'));
-                    const toIndex = index;
+                    const toIndex = i;
                     if (fromIndex !== toIndex && this.onLineupReorder) {
-                        this.onLineupReorder(fromIndex, toIndex);
+                        this.onLineupReorder(fromIndex, toIndex); // Swap slots
                     }
                 } else if (source === 'roster') {
-                    // Swap / Replace from Roster Pool
                     const playerId = e.dataTransfer.getData('player-id');
                     if (this.onPlayerReplace) {
-                        this.onPlayerReplace(index, playerId);
+                        this.onPlayerReplace(i, playerId); // Insert/Replace at slot
                     }
                 }
             });
 
-            card.innerHTML = `
-                <div class="flex flex-col items-center justify-center w-6">
-                    <span class="text-gray-400 text-xs font-bold">${index + 1}</span>
-                </div>
-                <div class="size-10 rounded-full bg-gray-700 overflow-hidden relative shrink-0">
-                     <div class="w-full h-full bg-gray-600 flex items-center justify-center text-xs text-gray-400">${player.position}</div>
-                </div>
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2">
-                        <h4 class="text-white font-bold text-sm truncate">${player.name}</h4>
-                        <span class="px-1.5 py-0.5 rounded bg-white/10 text-xs text-white/80 font-medium">${player.position}</span>
+            // If empty
+            if (isEmpty) {
+                card.innerHTML = `
+                    <div class="flex flex-col items-center justify-center w-6">
+                        <span class="text-gray-600 text-xs font-bold">${i + 1}</span>
                     </div>
-                    <p class="text-gray-400 text-xs">${player.hand === 'R' ? '우타' : player.hand === 'L' ? '좌타' : '양타'} • 타율 ${player.stats.avg.toFixed(3)}</p>
-                </div>
-                 <div class="text-right">
-                    <p class="text-primary font-bold text-sm">--</p>
-                    <p class="text-gray-500 text-[10px]">OPS</p>
-                </div>
-            `;
+                    <div class="flex-1 text-center py-2">
+                        <span class="text-gray-600 text-xs font-bold uppercase tracking-wider">빈 슬롯 (드래그하여 추가)</span>
+                    </div>
+                `;
+            } else {
+                card.innerHTML = `
+                    <div class="flex flex-col items-center justify-center w-6">
+                        <span class="text-gray-400 text-xs font-bold">${i + 1}</span>
+                    </div>
+                    <div class="size-10 rounded-full bg-gray-700 overflow-hidden relative shrink-0 group/remove">
+                         <div class="w-full h-full bg-gray-600 flex items-center justify-center text-xs text-gray-400">${player.position}</div>
+                         <!-- Remove Overlay -->
+                         <button class="remove-btn absolute inset-0 bg-red-500/80 hidden group-hover/remove:flex items-center justify-center text-white rounded-full" title="제외하기">
+                             <span class="material-symbols-outlined text-[16px]">close</span>
+                         </button>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2">
+                            <h4 class="text-white font-bold text-sm truncate">${player.name}</h4>
+                            <span class="px-1.5 py-0.5 rounded bg-white/10 text-xs text-white/80 font-medium">${player.position}</span>
+                        </div>
+                        <p class="text-gray-400 text-xs">${player.hand === 'R' ? '우타' : player.hand === 'L' ? '좌타' : '양타'} • 타율 ${player.stats.avg.toFixed(3)}</p>
+                    </div>
+                     <div class="text-right">
+                        <p class="text-primary font-bold text-sm">--</p>
+                        <p class="text-gray-500 text-[10px]">OPS</p>
+                    </div>
+                `;
+
+                // Remove Button Logic
+                const removeBtn = card.querySelector('.remove-btn');
+                if (removeBtn) {
+                    removeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Prevent drag start
+                        if (this.onPlayerRemove) this.onPlayerRemove(i);
+                    });
+                }
+            }
 
             this.lineupContainer.appendChild(card);
-        });
+        }
     }
 }

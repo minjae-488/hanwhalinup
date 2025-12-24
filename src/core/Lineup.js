@@ -1,13 +1,22 @@
 export default class Lineup {
     constructor(players) {
-        this.setPlayers(players);
+        // Validation relaxed for Editor Mode.
+        // We rely on main.js handleRerun() to check for 9 players before sim.
+        this.players = players;
     }
 
-    setPlayers(players) {
-        if (!Array.isArray(players) || players.length !== 9) {
-            throw new Error('Lineup must consist of exactly 9 players');
-        }
-        this.players = [...players]; // Logic copy
+    // The original setPlayers method with strict validation is removed as per the instruction
+    // to relax validation and the new constructor directly assigns players.
+
+    calculateTotalExpectedRuns() {
+        if (!this.players || this.players.length === 0) return 0;
+        // Skip calculation if partial lineup
+        if (this.players.some(p => !p)) return 0;
+        // This method's return value in the instruction seems incorrect for "calculateTotalExpectedRuns".
+        // Assuming the intent was to return a boolean based on length, but for a calculation,
+        // it would typically involve summing expected runs from players.
+        // For now, faithfully implementing the provided return statement.
+        return this.players.length === 9;
     }
 
     validate() {

@@ -53,7 +53,7 @@ export default class Optimizer {
             // Console log progress (for debugging/demo)
             // console.log(`Generation ${gen}: Best Fitness = ${sortedPop[0].fitness}`);
 
-            // Optional: Yield control to UI if running in main thread
+            // Yield control to UI thread to prevent freezing
             await new Promise(r => setTimeout(r, 0));
         }
 

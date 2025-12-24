@@ -364,7 +364,54 @@ export default class UIManager {
             const isHighlight = index < 3; // Highlight top 3
 
             const card = document.createElement('div');
-            card.className = `flex items-center gap-4 bg-surface-dark p-3 rounded-lg border-l-4 ${isHighlight ? 'border-accent-orange' : 'border-transparent'} transition-colors`;
+            card.className = `flex items-center gap-4 bg-surface-dark p-3 rounded-lg border-l-4 ${isHighlight ? 'border-accent-orange' : 'border-transparent'} transition-colors cursor-grab active:cursor-grabbing hover:bg-white/5`;
+
+            // Enable Drag
+            card.draggable = true;
+            card.dataset.index = index;
+
+            // Reorder Drag Events
+            card.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('index', index);
+                e.dataTransfer.setData('source', 'lineup');
+                e.dataTransfer.effectAllowed = 'move';
+                setTimeout(() => card.classList.add('opacity-20'), 0);
+            });
+
+            card.addEventListener('dragend', () => card.classList.remove('opacity-20'));
+
+            // Drop Zone Logic
+            card.addEventListener('dragover', (e) => {
+                e.preventDefault(); // Allow drop
+                e.dataTransfer.dropEffect = 'move';
+                card.classList.add('bg-white/10');
+            });
+
+            card.addEventListener('dragleave', () => {
+                card.classList.remove('bg-white/10');
+            });
+
+            card.addEventListener('drop', (e) => {
+                e.preventDefault();
+                card.classList.remove('bg-white/10');
+
+                const source = e.dataTransfer.getData('source');
+
+                if (source === 'lineup') {
+                    // Reorder
+                    const fromIndex = parseInt(e.dataTransfer.getData('index'));
+                    const toIndex = index;
+                    if (fromIndex !== toIndex && this.onLineupReorder) {
+                        this.onLineupReorder(fromIndex, toIndex);
+                    }
+                } else if (source === 'roster') {
+                    // Swap / Replace from Roster Pool
+                    const playerId = e.dataTransfer.getData('player-id');
+                    if (this.onPlayerReplace) {
+                        this.onPlayerReplace(index, playerId);
+                    }
+                }
+            });
 
             card.innerHTML = `
                 <div class="flex flex-col items-center justify-center w-6">

@@ -492,7 +492,7 @@ export default class UIManager {
                     </div>
                     <div class="flex-1 text-center py-3 border-2 border-dashed border-gray-600/50 rounded-lg flex items-center justify-center gap-2">
                         <span class="material-symbols-outlined text-gray-500">add_circle</span>
-                        <span class="text-gray-500 text-xs font-bold">선수를 선택하세요</span>
+                        <span class="text-gray-500 text-xs font-bold">${i + 1}번 타자 (미배정)</span>
                     </div>
                 `;
             } else {

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>라인업 비교 - 한화 이글스 시뮬레이터</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1b2631", // Slightly lighter than background-dark
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for roster list if needed */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-50 font-display min-h-screen relative pb-24">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-20 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+<div class="flex items-center justify-between px-4 py-3">
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-900 dark:text-white transition-colors">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold tracking-tight text-center flex-1">라인업 비교 분석</h1>
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-900 dark:text-white transition-colors">
+<span class="material-symbols-outlined text-2xl">share</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="px-4 py-6 space-y-6">
+<!-- Lineup Selection -->
+<section class="grid grid-cols-2 gap-3">
+<div class="flex flex-col gap-2">
+<label class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">기준 (A)</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-slate-700 text-sm font-medium rounded-xl py-3 pl-3 pr-8 focus:outline-none focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white shadow-sm">
+<option>어제 라인업</option>
+<option>최근 5경기 평균</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-xl">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-xs font-medium text-primary uppercase tracking-wider flex items-center gap-1">
+                    비교 (B)
+                    <span class="bg-primary/20 text-primary text-[10px] px-1.5 py-0.5 rounded-full">추천</span>
+</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-light dark:bg-surface-dark border-2 border-primary/30 text-sm font-medium rounded-xl py-3 pl-3 pr-8 focus:outline-none focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white shadow-sm">
+<option>AI 최적화 V2</option>
+<option>공격형 라인업</option>
+<option>수비형 라인업</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-primary pointer-events-none text-xl">expand_more</span>
+</div>
+</div>
+</section>
+<!-- Key Metrics Cards -->
+<section class="grid grid-cols-2 gap-3">
+<!-- Metric 1: Expected Runs -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-4 border border-slate-100 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl">scoreboard</span>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">기대 득점 (XR)</p>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-bold text-slate-400 decoration-slate-500/50 line-through decoration-2 decoration-slice">4.2</span>
+<span class="material-symbols-outlined text-sm text-slate-600 dark:text-slate-500">arrow_forward</span>
+<span class="text-3xl font-bold text-primary">5.1</span>
+</div>
+<div class="mt-2 inline-flex items-center gap-1 bg-green-500/10 text-green-600 dark:text-green-400 px-2 py-0.5 rounded-md text-xs font-semibold">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                    +21.4%
+                </div>
+</div>
+<!-- Metric 2: Win Probability -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-4 border border-slate-100 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl">trophy</span>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">승리 확률</p>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-bold text-slate-400">45%</span>
+<span class="material-symbols-outlined text-sm text-slate-600 dark:text-slate-500">arrow_forward</span>
+<span class="text-3xl font-bold text-primary">58%</span>
+</div>
+<div class="mt-2 inline-flex items-center gap-1 bg-green-500/10 text-green-600 dark:text-green-400 px-2 py-0.5 rounded-md text-xs font-semibold">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                    +13%p
+                </div>
+</div>
+</section>
+<!-- Scoring Distribution Chart -->
+<section class="bg-surface-light dark:bg-surface-dark rounded-2xl p-5 border border-slate-100 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-base font-bold text-slate-800 dark:text-white">득점 확률 분포</h3>
+<div class="flex gap-3 text-xs font-medium">
+<div class="flex items-center gap-1.5 text-slate-400">
+<div class="w-2.5 h-2.5 rounded-full bg-slate-400"></div> A
+                    </div>
+<div class="flex items-center gap-1.5 text-primary">
+<div class="w-2.5 h-2.5 rounded-full bg-primary"></div> B
+                    </div>
+</div>
+</div>
+<!-- Simulated Chart Area -->
+<div class="relative h-40 w-full flex items-end justify-between gap-1 pt-4">
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
+<div class="w-full h-px bg-slate-200 dark:bg-slate-800 border-dashed"></div>
+<div class="w-full h-px bg-slate-200 dark:bg-slate-800 border-dashed"></div>
+<div class="w-full h-px bg-slate-200 dark:bg-slate-800 border-dashed"></div>
+<div class="w-full h-px bg-slate-200 dark:bg-slate-800 border-dashed"></div>
+<div class="w-full h-px bg-slate-200 dark:bg-slate-800"></div>
+</div>
+<!-- SVG Area Chart Overlay -->
+<svg class="absolute inset-0 w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 100 100">
+<!-- Lineup A (Grey) -->
+<defs>
+<lineargradient id="gradA" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:#94a3b8;stop-opacity:0.3"></stop>
+<stop offset="100%" style="stop-color:#94a3b8;stop-opacity:0"></stop>
+</lineargradient>
+<lineargradient id="gradB" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:#137fec;stop-opacity:0.4"></stop>
+<stop offset="100%" style="stop-color:#137fec;stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+<!-- Path A Data -->
+<path d="M0,90 Q10,80 20,60 T40,50 T60,65 T80,85 T100,95 L100,100 L0,100 Z" fill="url(#gradA)" stroke="none"></path>
+<path d="M0,90 Q10,80 20,60 T40,50 T60,65 T80,85 T100,95" fill="none" stroke="#94a3b8" stroke-dasharray="4,4" stroke-width="2"></path>
+<!-- Path B Data (Higher peak) -->
+<path d="M0,95 Q15,85 30,50 T50,20 T70,40 T90,70 T100,90 L100,100 L0,100 Z" fill="url(#gradB)" stroke="none"></path>
+<path d="M0,95 Q15,85 30,50 T50,20 T70,40 T90,70 T100,90" fill="none" stroke="#137fec" stroke-width="2"></path>
+</svg>
+<!-- X Axis Labels (Runs) -->
+<div class="absolute -bottom-6 left-0 right-0 flex justify-between text-[10px] text-slate-400 font-medium px-2">
+<span>0</span>
+<span>2</span>
+<span>4</span>
+<span>6</span>
+<span>8+</span>
+</div>
+</div>
+<div class="h-4"></div> <!-- Spacer for x-axis labels -->
+</section>
+<!-- Roster Comparison -->
+<section>
+<div class="flex items-center justify-between mb-4 mt-4">
+<h3 class="text-base font-bold text-slate-800 dark:text-white">타순 비교 (1-9)</h3>
+<!-- Simple Tab Switcher Simulation -->
+<div class="flex bg-slate-200 dark:bg-slate-800 p-0.5 rounded-lg">
+<button class="px-3 py-1 text-xs font-medium rounded-md text-slate-500 dark:text-slate-400">A</button>
+<button class="px-3 py-1 text-xs font-medium rounded-md text-slate-500 dark:text-slate-400">B</button>
+<button class="px-3 py-1 text-xs font-bold rounded-md bg-white dark:bg-slate-700 text-primary shadow-sm">비교</button>
+</div>
+</div>
+<div class="space-y-3">
+<!-- Table Header -->
+<div class="grid grid-cols-[24px_1fr_24px_1fr] gap-2 px-3 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">
+<div class="text-center">#</div>
+<div>Lineup A</div>
+<div></div>
+<div>Lineup B</div>
+</div>
+<!-- Row 1: No Change -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl p-3 border border-slate-100 dark:border-slate-800 grid grid-cols-[24px_1fr_24px_1fr] items-center gap-2">
+<span class="text-sm font-bold text-slate-400 text-center">1</span>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-700 dark:text-slate-300">정은원</span>
+<span class="text-[10px] text-slate-400">2B • OBP .380</span>
+</div>
+<div class="flex justify-center">
+<span class="material-symbols-outlined text-slate-300 dark:text-slate-600 text-lg">drag_handle</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-700 dark:text-slate-300">정은원</span>
+<span class="text-[10px] text-slate-400">2B • OBP .380</span>
+</div>
+</div>
+<!-- Row 2: Change (Upgrade) -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl p-3 border border-primary/20 dark:border-primary/20 grid grid-cols-[24px_1fr_24px_1fr] items-center gap-2 shadow-sm shadow-primary/5">
+<span class="text-sm font-bold text-primary text-center">2</span>
+<div class="flex flex-col opacity-50">
+<span class="text-sm font-medium text-slate-700 dark:text-slate-300">문현빈</span>
+<span class="text-[10px] text-slate-400">CF • wRC+ 98</span>
+</div>
+<div class="flex justify-center">
+<span class="material-symbols-outlined text-primary text-lg">arrow_forward</span>
+</div>
+<div class="flex flex-col relative">
+<span class="text-sm font-bold text-primary">페라자</span>
+<span class="text-[10px] text-primary/70">RF • wRC+ 145</span>
+<div class="absolute -right-1 -top-1 w-1.5 h-1.5 bg-primary rounded-full"></div>
+</div>
+</div>
+<!-- Row 3: Change (Downgrade/Strategic) -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl p-3 border border-slate-100 dark:border-slate-800 grid grid-cols-[24px_1fr_24px_1fr] items-center gap-2">
+<span class="text-sm font-bold text-slate-400 text-center">3</span>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-700 dark:text-slate-300">노시환</span>
+<span class="text-[10px] text-slate-400">3B • HR 31</span>
+</div>
+<div class="flex justify-center">
+<span class="material-symbols-outlined text-orange-400 text-lg">swap_horiz</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-orange-400">안치홍</span>
+<span class="text-[10px] text-orange-400/70">1B • OPS .850</span>
+</div>
+</div>
+<!-- Row 4: No Change -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl p-3 border border-slate-100 dark:border-slate-800 grid grid-cols-[24px_1fr_24px_1fr] items-center gap-2">
+<span class="text-sm font-bold text-slate-400 text-center">4</span>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-700 dark:text-slate-300">채은성</span>
+<span class="text-[10px] text-slate-400">DH • RBI 80</span>
+</div>
+<div class="flex justify-center">
+<span class="material-symbols-outlined text-slate-300 dark:text-slate-600 text-lg">drag_handle</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-700 dark:text-slate-300">채은성</span>
+<span class="text-[10px] text-slate-400">DH • RBI 80</span>
+</div>
+</div>
+</div>
+<button class="w-full mt-4 text-center text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-primary transition-colors py-2">
+                전체 라인업 보기 (9명)
+            </button>
+</section>
+</main>
+<!-- Floating Action Button Area -->
+<div class="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background-light via-background-light to-transparent dark:from-background-dark dark:via-background-dark pointer-events-none z-30 h-28 flex items-end justify-center">
+<button class="pointer-events-auto shadow-lg shadow-primary/30 w-full max-w-sm bg-primary hover:bg-blue-600 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-transform active:scale-95">
+<span class="material-symbols-outlined">check</span>
+            라인업 B (AI 추천) 적용하기
+        </button>
+</div>
+</body></html>

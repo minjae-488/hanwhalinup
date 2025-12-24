@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lineup Detail View</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#137fec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101922",
+              "surface-light": "#ffffff",
+              "surface-dark": "#1a2634",
+            },
+            fontFamily: {
+              "display": ["Lexend", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        /* Custom scrollbar hiding */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto overflow-hidden bg-background-light dark:bg-background-dark shadow-xl">
+<!-- Header -->
+<header class="sticky top-0 z-20 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between p-4 h-16">
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-slate-800 dark:text-white">arrow_back</span>
+</button>
+<div class="flex flex-col items-center">
+<h1 class="text-base font-bold leading-tight">Lineup A - vs LG Twins</h1>
+<span class="text-xs text-slate-500 dark:text-slate-400">Oct 24, 2023 • 6:30 PM</span>
+</div>
+<button class="flex items-center text-primary font-medium text-sm hover:opacity-80 transition-opacity">
+                    Save
+                </button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto no-scrollbar pb-24">
+<!-- Performance Stats -->
+<section class="p-4">
+<div class="grid grid-cols-2 gap-4">
+<!-- Stat Card 1 -->
+<div class="bg-surface-light dark:bg-surface-dark p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700/50 flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl">sports_baseball</span>
+</div>
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider">Exp. Runs</p>
+</div>
+<div class="flex items-end gap-2">
+<span class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">5.4</span>
+<div class="flex items-center text-emerald-500 text-xs font-bold mb-1.5 bg-emerald-500/10 px-1.5 py-0.5 rounded">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+<span>1.2%</span>
+</div>
+</div>
+</div>
+<!-- Stat Card 2 -->
+<div class="bg-surface-light dark:bg-surface-dark p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700/50 flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl">trophy</span>
+</div>
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider">Win Prob</p>
+</div>
+<div class="flex items-end gap-2">
+<span class="text-3xl font-bold tracking-tight text-primary">62%</span>
+<div class="flex items-center text-emerald-500 text-xs font-bold mb-1.5 bg-emerald-500/10 px-1.5 py-0.5 rounded">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+<span>4.5%</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Analysis Tabs -->
+<div class="px-4 pb-2">
+<div class="flex p-1 bg-slate-200 dark:bg-surface-dark rounded-lg">
+<button class="flex-1 py-1.5 text-xs font-semibold text-center rounded bg-white dark:bg-primary shadow-sm text-slate-900 dark:text-white transition-all">Batting Order</button>
+<button class="flex-1 py-1.5 text-xs font-medium text-center rounded text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">Analysis</button>
+<button class="flex-1 py-1.5 text-xs font-medium text-center rounded text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">Bench</button>
+</div>
+</div>
+<!-- List Header -->
+<div class="flex items-center justify-between px-6 pt-4 pb-2">
+<h2 class="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Starting Lineup</h2>
+<div class="flex items-center gap-1 text-primary text-xs font-medium cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+<span>Edit Mode</span>
+</div>
+</div>
+<!-- Draggable List -->
+<div class="flex flex-col px-4 gap-3">
+<!-- Player Item 1 -->
+<div class="group relative flex items-center bg-surface-light dark:bg-surface-dark p-3 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm active:scale-[0.99] transition-all touch-manipulation">
+<div class="absolute -left-1 top-1/2 -translate-y-1/2 h-8 w-1 bg-primary rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<!-- Drag Handle -->
+<div class="text-slate-400 dark:text-slate-600 cursor-grab active:cursor-grabbing p-1 mr-2">
+<span class="material-symbols-outlined">drag_indicator</span>
+</div>
+<!-- Order Number -->
+<div class="flex items-center justify-center w-6 h-6 mr-3 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300">1</div>
+<!-- Player Info -->
+<div class="flex items-center flex-1 min-w-0 gap-3">
+<div class="relative shrink-0">
+<div class="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 bg-cover bg-center border-2 border-slate-100 dark:border-slate-600" data-alt="Portrait of baseball player Moon Hyun-bin" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCytxZUEjlSxgqSOhM4VL5MwA7OWmD5H_YDatrGRyACy5yuFEo9BgEikIOUcC2TJjun37rjkglJCiDPqdf_SXh618c9gh6i4KFtSoZ6aQqbhAqJxEKr8k4PyM6IYufIQbNqZVFE7Erg4sQaKUGAxAvP5yPQJOZc87v41VmVcBqKmJ49LbJ7KAAe07fleiLk341LYJRzhw62SKReqOoFmiUXVSI-xW8trFh1YpEeM7GjV5w-bqjM8PN5UjeKUega5YR4GLrBp6w5HNms');"></div>
+<div class="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[9px] font-bold px-1.5 py-0.5 rounded border border-white dark:border-slate-800">2B</div>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<h3 class="text-sm font-semibold text-slate-900 dark:text-white truncate">Moon Hyun-bin</h3>
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+<span class="bg-slate-100 dark:bg-slate-800 px-1.5 rounded">L/R</span>
+<span class="font-medium">AVG .280</span>
+</div>
+</div>
+</div>
+<!-- Quick Stats -->
+<div class="flex flex-col items-end gap-1 ml-2">
+<div class="text-xs font-medium text-slate-400 dark:text-slate-500">OBP</div>
+<div class="text-sm font-bold text-slate-800 dark:text-slate-200">.350</div>
+</div>
+</div>
+<!-- Player Item 2 -->
+<div class="group relative flex items-center bg-surface-light dark:bg-surface-dark p-3 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm active:scale-[0.99] transition-all touch-manipulation">
+<!-- Drag Handle -->
+<div class="text-slate-400 dark:text-slate-600 cursor-grab active:cursor-grabbing p-1 mr-2">
+<span class="material-symbols-outlined">drag_indicator</span>
+</div>
+<!-- Order Number -->
+<div class="flex items-center justify-center w-6 h-6 mr-3 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300">2</div>
+<!-- Player Info -->
+<div class="flex items-center flex-1 min-w-0 gap-3">
+<div class="relative shrink-0">
+<div class="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 bg-cover bg-center border-2 border-slate-100 dark:border-slate-600" data-alt="Portrait of baseball player Peraza" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCA0AK-ylvtE0UIPU9VXCmDgktWl5NLtKY0ZiEFpXyTyU2pqXu34JWWSM_7eOxF-6jdos3ZovWUHyTsN5Wu-5NEpNjxATd39OHtR-gqR_rOwCxCjsRuf-PBXl2KrNVlXJJ4dl0xA2r3o3xAqI6Y8TQQhXa5sryt_dtS2tdvr71ETBOgNvq5xPD2pFbiq7Da4uKFE5kCNHFUQqXcuLg_UOshHbNNbHC8DNtZO2ugNlJcOtdzx7W85i8fW1jLvm0vKunCcl9DSShY3BW3');"></div>
+<div class="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[9px] font-bold px-1.5 py-0.5 rounded border border-white dark:border-slate-800">RF</div>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<h3 class="text-sm font-semibold text-slate-900 dark:text-white truncate">Yonathan Peraza</h3>
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+<span class="bg-slate-100 dark:bg-slate-800 px-1.5 rounded">S/R</span>
+<span class="font-medium">AVG .310</span>
+</div>
+</div>
+</div>
+<!-- Quick Stats -->
+<div class="flex flex-col items-end gap-1 ml-2">
+<div class="text-xs font-medium text-slate-400 dark:text-slate-500">OBP</div>
+<div class="text-sm font-bold text-slate-800 dark:text-slate-200">.390</div>
+</div>
+</div>
+<!-- Player Item 3 -->
+<div class="group relative flex items-center bg-surface-light dark:bg-surface-dark p-3 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm active:scale-[0.99] transition-all touch-manipulation">
+<div class="text-slate-400 dark:text-slate-600 cursor-grab active:cursor-grabbing p-1 mr-2">
+<span class="material-symbols-outlined">drag_indicator</span>
+</div>
+<div class="flex items-center justify-center w-6 h-6 mr-3 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300">3</div>
+<div class="flex items-center flex-1 min-w-0 gap-3">
+<div class="relative shrink-0">
+<div class="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 bg-cover bg-center border-2 border-slate-100 dark:border-slate-600" data-alt="Portrait of baseball player Roh Si-hwan" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCab2g9oDyAfLEJZVQzxaKrqRmIGMmwO1-gYj2QFiwrXFi79-aRwWryhGDlLBDrv5CIDtrN3suiVwnHZH9y0RU8s2F74il__8B2mPV6wt20HhqckHOa772i6ebCtLhqx0iJCKAAJVSlgxf44w6iYR8wZAuv2Zb74NhaaytS7M1kaOCfufXAXB5NtJzUuSUHSHKIFmWn43QaGyMoSHWtz4wwSIrn69XULIGl9A3ZmF1FU0HjLgJwhcHA5GZ9wOuiqZ2LKLKARISZF4uK');"></div>
+<div class="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[9px] font-bold px-1.5 py-0.5 rounded border border-white dark:border-slate-800">3B</div>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<h3 class="text-sm font-semibold text-slate-900 dark:text-white truncate">Roh Si-hwan</h3>
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+<span class="bg-slate-100 dark:bg-slate-800 px-1.5 rounded">R/R</span>
+<span class="font-medium">AVG .295</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1 ml-2">
+<div class="text-xs font-medium text-slate-400 dark:text-slate-500">OBP</div>
+<div class="text-sm font-bold text-slate-800 dark:text-slate-200">.385</div>
+</div>
+</div>
+<!-- Player Item 4 -->
+<div class="group relative flex items-center bg-surface-light dark:bg-surface-dark p-3 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm active:scale-[0.99] transition-all touch-manipulation">
+<div class="text-slate-400 dark:text-slate-600 cursor-grab active:cursor-grabbing p-1 mr-2">
+<span class="material-symbols-outlined">drag_indicator</span>
+</div>
+<div class="flex items-center justify-center w-6 h-6 mr-3 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300">4</div>
+<div class="flex items-center flex-1 min-w-0 gap-3">
+<div class="relative shrink-0">
+<div class="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 bg-cover bg-center border-2 border-slate-100 dark:border-slate-600" data-alt="Portrait of baseball player Chae Eun-seong" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDpIpHwSz0U5Hc_SUAF9oKvs4LdPaGmCDKRtgTsOSiPWVGw0VTRa6UX_3SvWIKjSmgE52xvY3i0xYzXsHhazizj9JDcRdY7VfsFUbc0Ak6RKzCNM2MLHRwE-tLJhOSLO_eT-MCbuuGlsnojo8JS3v4Q4p-rFNDJcPfikHUXCa1xVvIhyScllp4A6Pwd2CkjYqdqLgGJ77pzufZ4IOSag1Rq4L5IVTtkyzKYV8eiMo82nU_khRQ94lFOBLjZ1grU_wU24Hu0pWdCfaB2');"></div>
+<div class="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[9px] font-bold px-1.5 py-0.5 rounded border border-white dark:border-slate-800">1B</div>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<h3 class="text-sm font-semibold text-slate-900 dark:text-white truncate">Chae Eun-seong</h3>
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+<span class="bg-slate-100 dark:bg-slate-800 px-1.5 rounded">R/R</span>
+<span class="font-medium">AVG .265</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1 ml-2">
+<div class="text-xs font-medium text-slate-400 dark:text-slate-500">OBP</div>
+<div class="text-sm font-bold text-slate-800 dark:text-slate-200">.330</div>
+</div>
+</div>
+<!-- Player Item 5 -->
+<div class="group relative flex items-center bg-surface-light dark:bg-surface-dark p-3 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm active:scale-[0.99] transition-all touch-manipulation">
+<div class="text-slate-400 dark:text-slate-600 cursor-grab active:cursor-grabbing p-1 mr-2">
+<span class="material-symbols-outlined">drag_indicator</span>
+</div>
+<div class="flex items-center justify-center w-6 h-6 mr-3 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300">5</div>
+<div class="flex items-center flex-1 min-w-0 gap-3">
+<div class="relative shrink-0">
+<div class="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 bg-cover bg-center border-2 border-slate-100 dark:border-slate-600" data-alt="Portrait of baseball player An Chi-hong" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA-fyGIYahhYRO8hS_Nx3SQiyh570tH0ON1X150gQMLT96pBr_JzLkuGkpVsfZXCfLohs37x9UEC9_VnsQyq9eg_G6mjwXgoDvnWtl6jJo45MUHYiHsN4ceAbtTo5zDf-nSr7k5JGGgtTwIOkAh56g4h56GwAU5VrjfWSc2goKkmpX8ZjmAtQIALBWQZUUnkww_d284UYePHvrigRhSgY93YoMDja1rycN6b-SdcgD7rBNVxNFmFJYs-csBNcfWYxvKdU310U2VGruG');"></div>
+<div class="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[9px] font-bold px-1.5 py-0.5 rounded border border-white dark:border-slate-800">DH</div>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<h3 class="text-sm font-semibold text-slate-900 dark:text-white truncate">An Chi-hong</h3>
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+<span class="bg-slate-100 dark:bg-slate-800 px-1.5 rounded">R/R</span>
+<span class="font-medium">AVG .292</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1 ml-2">
+<div class="text-xs font-medium text-slate-400 dark:text-slate-500">OBP</div>
+<div class="text-sm font-bold text-slate-800 dark:text-slate-200">.360</div>
+</div>
+</div>
+<!-- Spacer for scrolling -->
+<div class="h-24"></div>
+</div>
+</main>
+<!-- Floating Action Button / Sticky Footer -->
+<div class="absolute bottom-6 left-0 right-0 px-6 z-30 pointer-events-none">
+<button class="pointer-events-auto w-full bg-primary hover:bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 transition-all transform active:scale-95">
+<span class="material-symbols-outlined">play_circle</span>
+                Run Simulation
+            </button>
+</div>
+</div>
+</body></html>

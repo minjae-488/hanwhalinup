@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hanwha Eagles Simulation Dashboard</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&amp;family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "primary-dark": "#0b5ec2",
+                        "accent-orange": "#f37321", // Hanwha Orange-ish
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111a22",
+                        "surface-dark": "#233648",
+                        "surface-darker": "#1a2633",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "Noto Sans KR", "sans-serif"],
+                        "body": ["Noto Sans KR", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .baseball-diamond {
+            width: 160px;
+            height: 160px;
+            transform: rotate(45deg);
+            border: 2px solid rgba(255,255,255,0.1);
+            background-color: #2e4a38;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+        .base {
+            width: 14px;
+            height: 14px;
+            background-color: white;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        /* Base positions un-rotated relative to diamond container */
+        .home-plate { bottom: -7px; left: -7px; border-radius: 2px; transform: rotate(0); } /* Actually corner since div is rotated */
+        
+        /* For player dots, we need a wrapper that isn't rotated to hold them, or calculate positions carefully */
+        .field-wrapper {
+            perspective: 500px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white overflow-x-hidden antialiased pb-24">
+<!-- Top App Bar -->
+<div class="sticky top-0 z-50 flex items-center bg-background-dark/95 backdrop-blur-sm p-4 pb-3 justify-between border-b border-white/5">
+<div class="flex items-center gap-3">
+<button class="text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-[24px]">menu</span>
+</button>
+<div class="flex flex-col">
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Hanwha Eagles</h2>
+<span class="text-xs text-gray-400 font-medium">Simulation #2481 • Today, 14:30</span>
+</div>
+</div>
+<div class="flex items-center justify-end gap-2">
+<button class="flex size-10 items-center justify-center rounded-full bg-surface-dark text-white hover:bg-surface-darker transition-colors">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+</button>
+<div class="size-10 rounded-full bg-gradient-to-br from-accent-orange to-red-600 p-[2px]">
+<div class="size-full rounded-full bg-surface-dark flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[20px]">person</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Content -->
+<main class="flex flex-col w-full max-w-md mx-auto relative">
+<!-- Simulation Header -->
+<div class="px-4 pt-6 pb-2">
+<div class="flex items-center justify-between">
+<h2 class="text-white text-[26px] font-bold leading-tight">Optimization Result</h2>
+<span class="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs font-bold uppercase tracking-wider border border-green-500/30">Complete</span>
+</div>
+<p class="text-gray-400 text-sm mt-1">Comparing current vs. AI optimized lineup</p>
+</div>
+<!-- Key Stats Cards -->
+<div class="grid grid-cols-2 gap-4 p-4">
+<!-- Win Probability Card -->
+<div class="flex flex-col gap-1 rounded-xl p-5 bg-surface-dark border border-white/5 relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl">trophy</span>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<div class="w-1 h-4 bg-accent-orange rounded-full"></div>
+<p class="text-gray-400 text-xs font-medium uppercase tracking-wider">Win Prob</p>
+</div>
+<div class="flex items-end gap-2">
+<p class="text-white text-3xl font-bold leading-none">60.5%</p>
+</div>
+<div class="flex items-center gap-1 mt-2">
+<span class="material-symbols-outlined text-green-500 text-sm">trending_up</span>
+<p class="text-green-500 text-sm font-bold leading-normal">+12.5%</p>
+<span class="text-gray-500 text-xs ml-1">vs Current</span>
+</div>
+</div>
+<!-- Expected Runs Card -->
+<div class="flex flex-col gap-1 rounded-xl p-5 bg-surface-dark border border-white/5 relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl">scoreboard</span>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<div class="w-1 h-4 bg-primary rounded-full"></div>
+<p class="text-gray-400 text-xs font-medium uppercase tracking-wider">Exp. Runs</p>
+</div>
+<div class="flex items-end gap-2">
+<p class="text-white text-3xl font-bold leading-none">5.1</p>
+<span class="text-gray-400 text-sm font-medium mb-1">Runs</span>
+</div>
+<div class="flex items-center gap-1 mt-2">
+<span class="material-symbols-outlined text-green-500 text-sm">trending_up</span>
+<p class="text-green-500 text-sm font-bold leading-normal">+0.9</p>
+<span class="text-gray-500 text-xs ml-1">vs Current</span>
+</div>
+</div>
+</div>
+<!-- Charts Section -->
+<div class="px-4 py-2">
+<div class="bg-surface-dark rounded-xl p-5 border border-white/5">
+<div class="flex justify-between items-start mb-6">
+<div>
+<p class="text-white text-lg font-bold">Win Probability</p>
+<p class="text-gray-400 text-xs">Projection over 9 innings</p>
+</div>
+<div class="flex gap-2">
+<div class="flex items-center gap-1">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="text-[10px] text-gray-400">Optimized</span>
+</div>
+<div class="flex items-center gap-1">
+<div class="w-2 h-2 rounded-full bg-gray-600"></div>
+<span class="text-[10px] text-gray-400">Current</span>
+</div>
+</div>
+</div>
+<div class="relative h-[160px] w-full">
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between text-gray-600 text-[10px]">
+<div class="w-full border-b border-gray-700/50 h-0"></div>
+<div class="w-full border-b border-gray-700/50 h-0"></div>
+<div class="w-full border-b border-gray-700/50 h-0"></div>
+<div class="w-full border-b border-gray-700/50 h-0"></div>
+</div>
+<!-- Chart SVG -->
+<svg class="absolute inset-0 w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 100 100">
+<!-- Current Line (Gray) -->
+<path d="M0,60 Q20,65 40,55 T80,50 T100,52" fill="none" stroke="#4b5563" stroke-dasharray="4 2" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+<!-- Optimized Line (Primary Blue) -->
+<path d="M0,60 Q15,40 30,35 T60,25 T100,20" fill="none" stroke="#137fec" stroke-width="3" vector-effect="non-scaling-stroke"></path>
+<!-- Gradient Fill for Optimized -->
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#137fec" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#137fec" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,60 Q15,40 30,35 T60,25 T100,20 V100 H0 Z" fill="url(#chartGradient)" stroke="none"></path>
+<!-- Dots -->
+<circle cx="0" cy="60" fill="#137fec" r="1.5"></circle>
+<circle cx="100" cy="20" fill="#137fec" r="1.5"></circle>
+</svg>
+</div>
+<!-- X Axis Labels -->
+<div class="flex justify-between mt-2 text-[10px] text-gray-500 font-medium">
+<span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
+</div>
+</div>
+</div>
+<!-- Lineup Section Divider -->
+<div class="h-6 w-full"></div>
+<!-- Lineup Toggle -->
+<div class="px-4 sticky top-[72px] z-40 bg-background-dark py-2">
+<div class="bg-surface-dark p-1 rounded-lg flex relative">
+<div class="absolute left-1 top-1 bottom-1 w-[calc(50%-4px)] bg-primary rounded shadow-sm transition-all duration-300 translate-x-[calc(100%+4px)]"></div>
+<button class="flex-1 py-2 text-sm font-medium text-gray-400 z-10 relative text-center">Current Lineup</button>
+<button class="flex-1 py-2 text-sm font-bold text-white z-10 relative text-center">Optimized Lineup</button>
+</div>
+</div>
+<!-- Field Visualizer (Simplified) -->
+<div class="px-4 py-4 flex justify-center">
+<div class="relative w-full aspect-[2/1] bg-surface-darker rounded-xl border border-white/5 overflow-hidden flex items-center justify-center">
+<!-- Field Graphic Background -->
+<div class="absolute inset-0 bg-[#233648] opacity-50" data-alt="Abstract pattern representing a baseball field turf" style="background-image: radial-gradient(#2e4a38 2px, transparent 2px); background-size: 20px 20px;"></div>
+<!-- The Diamond -->
+<div class="relative mt-8">
+<div class="baseball-diamond"></div>
+<!-- Bases -->
+<div class="absolute w-3 h-3 bg-white/80 rotate-45" style="bottom: 0px; left: 50%; transform: translate(-50%, 50%) rotate(45deg);"></div> <!-- Home -->
+<div class="absolute w-3 h-3 bg-white/80 rotate-45" style="top: 50%; right: 0px; transform: translate(50%, -50%) rotate(45deg);"></div> <!-- 1st -->
+<div class="absolute w-3 h-3 bg-white/80 rotate-45" style="top: 0px; left: 50%; transform: translate(-50%, -50%) rotate(45deg);"></div> <!-- 2nd -->
+<div class="absolute w-3 h-3 bg-white/80 rotate-45" style="top: 50%; left: 0px; transform: translate(-50%, -50%) rotate(45deg);"></div> <!-- 3rd -->
+<!-- Players (Absolute on top of the rotated diamond wrapper) -->
+<!-- P (Pitcher) -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="w-6 h-6 rounded-full bg-accent-orange text-[10px] font-bold text-white flex items-center justify-center shadow-lg border border-white">P</div>
+</div>
+<!-- C (Catcher) -->
+<div class="absolute bottom-[-20px] left-1/2 -translate-x-1/2 flex flex-col items-center">
+<div class="w-6 h-6 rounded-full bg-primary text-[10px] font-bold text-white flex items-center justify-center shadow-lg border border-white">C</div>
+<span class="text-[9px] text-white font-bold bg-black/50 px-1 rounded mt-1 whitespace-nowrap">Jae-hoon</span>
+</div>
+<!-- 1B -->
+<div class="absolute top-1/2 right-[-25px] -translate-y-1/2 flex flex-col items-center">
+<div class="w-6 h-6 rounded-full bg-primary text-[10px] font-bold text-white flex items-center justify-center shadow-lg border border-white">1B</div>
+</div>
+<!-- 2B -->
+<div class="absolute top-0 right-[-10px] flex flex-col items-center">
+<div class="w-6 h-6 rounded-full bg-primary text-[10px] font-bold text-white flex items-center justify-center shadow-lg border border-white">2B</div>
+</div>
+<!-- SS -->
+<div class="absolute top-0 left-[-10px] flex flex-col items-center">
+<div class="w-6 h-6 rounded-full bg-primary text-[10px] font-bold text-white flex items-center justify-center shadow-lg border border-white">SS</div>
+</div>
+<!-- 3B -->
+<div class="absolute top-1/2 left-[-25px] -translate-y-1/2 flex flex-col items-center">
+<div class="w-6 h-6 rounded-full bg-primary text-[10px] font-bold text-white flex items-center justify-center shadow-lg border border-white">3B</div>
+<span class="text-[9px] text-white font-bold bg-black/50 px-1 rounded mt-1 whitespace-nowrap">Si-hwan</span>
+</div>
+<!-- LF -->
+<div class="absolute top-[-30px] left-[-40px] flex flex-col items-center">
+<div class="w-6 h-6 rounded-full bg-primary text-[10px] font-bold text-white flex items-center justify-center shadow-lg border border-white">LF</div>
+</div>
+<!-- CF -->
+<div class="absolute top-[-50px] left-1/2 -translate-x-1/2 flex flex-col items-center">
+<div class="w-6 h-6 rounded-full bg-primary text-[10px] font-bold text-white flex items-center justify-center shadow-lg border border-white">CF</div>
+</div>
+<!-- RF -->
+<div class="absolute top-[-30px] right-[-40px] flex flex-col items-center">
+<div class="w-6 h-6 rounded-full bg-primary text-[10px] font-bold text-white flex items-center justify-center shadow-lg border border-white">RF</div>
+<span class="text-[9px] text-white font-bold bg-black/50 px-1 rounded mt-1 whitespace-nowrap">Peraza</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Batting Order List -->
+<div class="flex flex-col gap-2 px-4 pb-4">
+<h3 class="text-white text-sm font-bold uppercase tracking-wider mb-2 ml-1">Batting Order (1-9)</h3>
+<!-- Player Row 1 (Highlight) -->
+<div class="flex items-center gap-4 bg-surface-dark p-3 rounded-lg border-l-4 border-accent-orange shadow-sm">
+<div class="flex flex-col items-center justify-center w-6">
+<span class="text-gray-400 text-xs font-bold">1</span>
+</div>
+<div class="size-10 rounded-full bg-gray-700 overflow-hidden relative shrink-0">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<!-- Placeholder for player image -->
+<div class="w-full h-full bg-gray-600 flex items-center justify-center text-xs text-gray-400" data-alt="Avatar placeholder">IMG</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<h4 class="text-white font-bold text-sm truncate">Moon Hyun-bin</h4>
+<span class="px-1.5 py-0.5 rounded bg-white/10 text-xs text-white/80 font-medium">2B</span>
+</div>
+<p class="text-gray-400 text-xs">Left-handed • Avg .284</p>
+</div>
+<div class="text-right">
+<p class="text-primary font-bold text-sm">0.812</p>
+<p class="text-gray-500 text-[10px]">OPS</p>
+</div>
+</div>
+<!-- Player Row 2 -->
+<div class="flex items-center gap-4 bg-surface-dark p-3 rounded-lg border-l-4 border-transparent hover:bg-white/5 transition-colors">
+<div class="flex flex-col items-center justify-center w-6">
+<span class="text-gray-400 text-xs font-bold">2</span>
+</div>
+<div class="size-10 rounded-full bg-gray-700 overflow-hidden shrink-0">
+<div class="w-full h-full bg-gray-600 flex items-center justify-center text-xs text-gray-400" data-alt="Avatar placeholder">IMG</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<h4 class="text-white font-bold text-sm truncate">Yonathan Peraza</h4>
+<span class="px-1.5 py-0.5 rounded bg-white/10 text-xs text-white/80 font-medium">RF</span>
+</div>
+<p class="text-gray-400 text-xs">Switch • Avg .295</p>
+</div>
+<div class="text-right">
+<p class="text-primary font-bold text-sm">0.885</p>
+<p class="text-gray-500 text-[10px]">OPS</p>
+</div>
+</div>
+<!-- Player Row 3 -->
+<div class="flex items-center gap-4 bg-surface-dark p-3 rounded-lg border-l-4 border-transparent hover:bg-white/5 transition-colors">
+<div class="flex flex-col items-center justify-center w-6">
+<span class="text-gray-400 text-xs font-bold">3</span>
+</div>
+<div class="size-10 rounded-full bg-gray-700 overflow-hidden shrink-0">
+<div class="w-full h-full bg-gray-600 flex items-center justify-center text-xs text-gray-400" data-alt="Avatar placeholder">IMG</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<h4 class="text-white font-bold text-sm truncate">Roh Si-hwan</h4>
+<span class="px-1.5 py-0.5 rounded bg-white/10 text-xs text-white/80 font-medium">3B</span>
+<!-- Status Icon -->
+<span class="material-symbols-outlined text-red-500 text-[14px]">local_fire_department</span>
+</div>
+<p class="text-gray-400 text-xs">Right-handed • 31 HR</p>
+</div>
+<div class="text-right">
+<p class="text-primary font-bold text-sm">0.921</p>
+<p class="text-gray-500 text-[10px]">OPS</p>
+</div>
+</div>
+<!-- Player Row 4 -->
+<div class="flex items-center gap-4 bg-surface-dark p-3 rounded-lg border-l-4 border-transparent hover:bg-white/5 transition-colors">
+<div class="flex flex-col items-center justify-center w-6">
+<span class="text-gray-400 text-xs font-bold">4</span>
+</div>
+<div class="size-10 rounded-full bg-gray-700 overflow-hidden shrink-0">
+<div class="w-full h-full bg-gray-600 flex items-center justify-center text-xs text-gray-400" data-alt="Avatar placeholder">IMG</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<h4 class="text-white font-bold text-sm truncate">Chae Eun-seong</h4>
+<span class="px-1.5 py-0.5 rounded bg-white/10 text-xs text-white/80 font-medium">1B</span>
+</div>
+<p class="text-gray-400 text-xs">Right-handed • 85 RBI</p>
+</div>
+<div class="text-right">
+<p class="text-white font-medium text-sm">0.798</p>
+<p class="text-gray-500 text-[10px]">OPS</p>
+</div>
+</div>
+<!-- Player Row 5 -->
+<div class="flex items-center gap-4 bg-surface-dark p-3 rounded-lg border-l-4 border-transparent hover:bg-white/5 transition-colors">
+<div class="flex flex-col items-center justify-center w-6">
+<span class="text-gray-400 text-xs font-bold">5</span>
+</div>
+<div class="size-10 rounded-full bg-gray-700 overflow-hidden shrink-0">
+<div class="w-full h-full bg-gray-600 flex items-center justify-center text-xs text-gray-400" data-alt="Avatar placeholder">IMG</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<h4 class="text-white font-bold text-sm truncate">An Chi-hong</h4>
+<span class="px-1.5 py-0.5 rounded bg-white/10 text-xs text-white/80 font-medium">DH</span>
+</div>
+<p class="text-gray-400 text-xs">Right-handed • Avg .290</p>
+</div>
+<div class="text-right">
+<p class="text-white font-medium text-sm">0.810</p>
+<p class="text-gray-500 text-[10px]">OPS</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Action Bar (Fixed) -->
+<div class="fixed bottom-0 left-0 right-0 p-4 bg-background-dark/80 backdrop-blur-md border-t border-white/5 z-50">
+<div class="flex gap-3 max-w-md mx-auto">
+<button class="flex-1 bg-surface-dark hover:bg-surface-darker text-white font-bold py-3 px-4 rounded-xl border border-white/10 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">refresh</span>
+                Rerun
+            </button>
+<button class="flex-[2] bg-primary hover:bg-primary-dark text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-primary/20 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">check</span>
+                Apply Lineup
+            </button>
+</div>
+</div>
+</body></html>

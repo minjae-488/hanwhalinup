@@ -410,7 +410,7 @@ export default class UIManager {
             // If empty slot, different styling
             const isEmpty = !player;
 
-            card.className = `flex items-center gap-4 p-3 rounded-lg border-l-4 transition-colors cursor-grab active:cursor-grabbing hover:bg-white/5 ${isEmpty ? 'bg-surface-darker border-gray-700 border-dashed' : 'bg-surface-dark ' + (isHighlight ? 'border-accent-orange' : 'border-transparent')}`;
+            card.className = `flex items-center gap-4 p-3 rounded-lg border-l-4 transition-colors cursor-grab active:cursor-grabbing hover:bg-white/5 min-h-[5.5rem] ${isEmpty ? 'bg-surface-darker border-gray-700 border-dashed' : 'bg-surface-dark ' + (isHighlight ? 'border-accent-orange' : 'border-transparent')}`;
 
             card.draggable = true;
             card.dataset.index = i; // Slot index

@@ -39,7 +39,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     ui.onPlayerReplace = (index, newPlayerId) => {
-        const newPlayerConfig = rosterData.find(p => p.id === newPlayerId);
+        // Ensure ID types match (roster usually has strings or numbers, let's normalize check)
+        const newPlayerConfig = rosterData.find(p => String(p.id) === String(newPlayerId));
         if (newPlayerConfig) {
             const newPlayer = new Player(newPlayerConfig.id, newPlayerConfig.name, newPlayerConfig.position, newPlayerConfig.hand, newPlayerConfig.stats, newPlayerConfig.category);
 

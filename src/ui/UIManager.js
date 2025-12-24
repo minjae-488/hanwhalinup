@@ -394,74 +394,99 @@ export default class UIManager {
     }
 
     renderChart(currentData, optimizedData) {
-        // Render simple SVG Chart comparison
-        // currentData, optimizedData are simple values (Expected Runs)
-        // Or arrays of runs per inning if we simulated that detail.
+        // Stub for chart rendering (not implemented in this MVP)
+    }
 
-        // For MVP, let's visualize Win Probability bar or simulated distribution curve.
-        // Let's do a simple Bar Comparison since we only have aggregate data in main.js currently.
+    renderLineup(lineup, type, flashIndex = -1) {
+        // Render Field View as well whenever lineup updates
+        this.renderField(lineup);
 
-        // Find chart container
-        e.dataTransfer.setData('source', 'lineup');
-        if (!isEmpty) {
-            e.dataTransfer.setData('player-id', player.id); // Also allow moving back to roster? 
-        }
-        e.dataTransfer.effectAllowed = 'move';
-        setTimeout(() => card.classList.add('opacity-50'), 0);
-    });
+        this.lineupContainer.innerHTML = '';
+        const slots = 9;
+
+        for (let i = 0; i < slots; i++) {
+            const player = lineup.players[i];
+            const isHighlight = i < 3;
+            const isEmpty = !player;
+
+            const card = document.createElement('div');
+
+            // Base layout logic
+            let baseClasses = `flex items-center gap-4 p-3 rounded-lg border-l-4 transition-all duration-300 cursor-grab active:cursor-grabbing hover:bg-white/5 min-h-[5.5rem] relative overflow-hidden`;
+
+            if (isEmpty) {
+                // Dimmed Empty Slot
+                card.className = `${baseClasses} bg-surface-darker border-gray-700 border-dashed opacity-50 hover:opacity-100`;
+            } else {
+                // Active Card
+                card.className = `${baseClasses} bg-surface-dark ${isHighlight ? 'border-accent-orange' : 'border-transparent'}`;
+
+                // Trigger Flash if New
+                if (i === flashIndex) {
+                    card.classList.add('animate-flash-orange');
+                }
+            }
+
+            card.draggable = true;
+            card.dataset.index = i;
+
+            // Drag Handlers
+            card.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('index', i);
+                e.dataTransfer.setData('source', 'lineup');
+                if (!isEmpty) e.dataTransfer.setData('player-id', player.id);
+                e.dataTransfer.effectAllowed = 'move';
+                setTimeout(() => card.classList.add('opacity-50'), 0);
+            });
 
             card.addEventListener('dragend', () => card.classList.remove('opacity-50'));
 
-card.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-    card.classList.add('bg-white/10');
-});
+            card.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                if (!isEmpty) card.classList.add('bg-white/10');
+                if (isEmpty) card.style.opacity = '1'; // Highlight empty target
+            });
 
-card.addEventListener('dragleave', () => {
-    card.classList.remove('bg-white/10');
-});
+            card.addEventListener('dragleave', () => {
+                if (!isEmpty) card.classList.remove('bg-white/10');
+                if (isEmpty) card.style.opacity = '';
+            });
 
-card.addEventListener('drop', (e) => {
-    e.preventDefault();
-    card.classList.remove('bg-white/10');
+            card.addEventListener('drop', (e) => {
+                e.preventDefault();
+                if (!isEmpty) card.classList.remove('bg-white/10');
+                if (isEmpty) card.style.opacity = '';
 
-    const source = e.dataTransfer.getData('source');
+                const source = e.dataTransfer.getData('source');
+                if (source === 'lineup') {
+                    const fromIndex = parseInt(e.dataTransfer.getData('index'));
+                    if (fromIndex !== i && this.onLineupReorder) this.onLineupReorder(fromIndex, i);
+                } else if (source === 'roster') {
+                    const playerId = e.dataTransfer.getData('player-id');
+                    if (this.onPlayerReplace) this.onPlayerReplace(i, playerId);
+                }
+            });
 
-    if (source === 'lineup') {
-        const fromIndex = parseInt(e.dataTransfer.getData('index'));
-        const toIndex = i;
-        if (fromIndex !== toIndex && this.onLineupReorder) {
-            this.onLineupReorder(fromIndex, toIndex); // Swap slots
-        }
-    } else if (source === 'roster') {
-        const playerId = e.dataTransfer.getData('player-id');
-        if (this.onPlayerReplace) {
-            this.onPlayerReplace(i, playerId); // Insert/Replace at slot
-        }
-    }
-});
-
-// If empty
-if (isEmpty) {
-    card.innerHTML = `
+            // Inner Content
+            if (isEmpty) {
+                card.innerHTML = `
                     <div class="flex flex-col items-center justify-center w-6">
-                        <span class="text-gray-600 text-xs font-bold">${i + 1}</span>
+                        <span class="text-gray-500 text-xs font-bold">${i + 1}</span>
                     </div>
-                    <div class="flex-1 text-center py-3 border-2 border-dashed border-gray-700 rounded-lg bg-black/20 flex items-center justify-center gap-2 group-hover:border-gray-500 transition-colors">
-                        <span class="material-symbols-outlined text-gray-600 group-hover:text-gray-400">add_circle</span>
-                        <span class="text-gray-600 text-xs font-bold group-hover:text-gray-400">선수 미배정 (드래그)</span>
+                    <div class="flex-1 text-center py-3 border-2 border-dashed border-gray-600/50 rounded-lg flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-gray-500">add_circle</span>
+                        <span class="text-gray-500 text-xs font-bold">선수를 선택하세요</span>
                     </div>
                 `;
-} else {
-    card.innerHTML = `
+            } else {
+                card.innerHTML = `
                     <div class="flex flex-col items-center justify-center w-6">
                         <span class="text-gray-400 text-xs font-bold">${i + 1}</span>
                     </div>
                     <div class="size-10 rounded-full bg-gray-700 overflow-hidden relative shrink-0 group/remove">
                          <div class="w-full h-full bg-gray-600 flex items-center justify-center text-xs text-gray-400">${player.position}</div>
-                         <!-- Remove Overlay -->
-                         <button class="remove-btn absolute inset-0 bg-red-500/80 hidden group-hover/remove:flex items-center justify-center text-white rounded-full" title="제외하기">
+                         <button class="remove-btn absolute inset-0 bg-red-500/80 hidden group-hover/remove:flex items-center justify-center text-white rounded-full transition-opacity" title="제외하기">
                              <span class="material-symbols-outlined text-[16px]">close</span>
                          </button>
                     </div>
@@ -478,17 +503,16 @@ if (isEmpty) {
                     </div>
                 `;
 
-    // Remove Button Logic
-    const removeBtn = card.querySelector('.remove-btn');
-    if (removeBtn) {
-        removeBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent drag start
-            if (this.onPlayerRemove) this.onPlayerRemove(i);
-        });
-    }
-}
+                const removeBtn = card.querySelector('.remove-btn');
+                if (removeBtn) {
+                    removeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (this.onPlayerRemove) this.onPlayerRemove(i);
+                    });
+                }
+            }
 
-this.lineupContainer.appendChild(card);
+            this.lineupContainer.appendChild(card);
         }
     }
 }

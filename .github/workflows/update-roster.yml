@@ -1,0 +1,50 @@
+name: Update Roster Data
+
+on:
+  schedule:
+    # 매일 한국시간 오전 6시 (UTC 21:00)에 실행
+    - cron: '0 21 * * *'
+  workflow_dispatch: # 수동 실행 가능
+
+jobs:
+  update-roster:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4 lxml
+      
+      - name: Run roster update script
+        run: |
+          cd scripts
+          python update_roster.py
+      
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --quiet src/data/roster.js || echo "changed=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit and push if changed
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add src/data/roster.js
+          git commit -m "chore: Auto-update roster data [$(date +'%Y-%m-%d %H:%M:%S KST')]"
+          git push
+      
+      - name: No changes detected
+        if: steps.check_changes.outputs.changed != 'true'
+        run: |
+          echo "ℹ️  No changes in roster data"

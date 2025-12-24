@@ -19,7 +19,62 @@ document.addEventListener('DOMContentLoaded', async () => {
     ui.renderLineup(currentLineup, 'current'); // Will render initial view
 
     // 3. Event Binding
-    const btnRerun = document.getElementById('btn-rerun');
+    // 3. Event Binding
+    // Helper to bind multiple buttons
+    const bindClick = (ids, handler) => {
+        ids.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('click', handler);
+        });
+    };
+
+    // RERUN Handler
+    const handleRerun = async () => {
+        ui.setLoading(true);
+        // Disable buttons
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(b => b.disabled = true);
+
+        // Run Optimization (Genetic Algorithm)
+        setTimeout(async () => {
+            try {
+                const optimizer = new Optimizer(currentLineup);
+                console.time('Optimization');
+
+                // Config for speed demo
+                optimizedLineup = await optimizer.optimize({
+                    generations: 20,
+                    populationSize: 50,
+                    simulationsPerLineup: 50
+                });
+
+                console.timeEnd('Optimization');
+
+                // Evaluate Result
+                const simCurrent = await optimizer.evaluateFitness(currentLineup, 200);
+                const simOptimized = await optimizer.evaluateFitness(optimizedLineup, 200);
+
+                // Update UI
+                ui.renderResults({
+                    currentRun: simCurrent,
+                    optimizedRun: simOptimized,
+                    winRate: 60.5
+                });
+                ui.renderLineup(optimizedLineup, 'optimized');
+
+            } catch (e) {
+                console.error(e);
+                alert('Optimization failed execution.');
+            } finally {
+                ui.setLoading(false);
+                buttons.forEach(b => b.disabled = false);
+            }
+        }, 100);
+    };
+
+    bindClick(['btn-rerun', 'btn-rerun-mobile'], handleRerun);
+    bindClick(['btn-apply', 'btn-apply-mobile'], () => alert('Lineup applied! (Mock)'));
+
     const btnLiveSim = document.getElementById('btn-live-sim');
 
     // State
@@ -66,49 +121,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // RERUN / OPTIMIZE Action
-    btnRerun.addEventListener('click', async () => {
-        ui.setLoading(true);
-        btnRerun.disabled = true;
-
-        // Run Optimization (Genetic Algorithm)
-        // Use timeout to allow UI to update loading state (Simulate Async Worker)
-        setTimeout(async () => {
-            try {
-                const optimizer = new Optimizer(currentLineup);
-                console.time('Optimization');
-
-                // Config for speed demo
-                optimizedLineup = await optimizer.optimize({
-                    generations: 20,
-                    populationSize: 50,
-                    simulationsPerLineup: 50
-                });
-
-                console.timeEnd('Optimization');
-
-                // Evaluate Result
-                // Compare Current vs Optimized
-                const simCurrent = await optimizer.evaluateFitness(currentLineup, 200);
-                const simOptimized = await optimizer.evaluateFitness(optimizedLineup, 200);
-
-                // Update UI
-                ui.renderResults({
-                    currentRun: simCurrent,
-                    optimizedRun: simOptimized,
-                    winRate: 60.5 // TODO: Calculate actual winrate against league avg
-                });
-                ui.renderLineup(optimizedLineup, 'optimized');
-
-            } catch (e) {
-                console.error(e);
-                alert('Optimization failed execution.');
-            } finally {
-                ui.setLoading(false);
-                btnRerun.disabled = false;
-            }
-        }, 100);
-    });
 
     // Toggle Lineup View Logic (Simple visual toggle)
     // For MVP, we switch the list content when user clicks "Optimized Lineup" tab in UI

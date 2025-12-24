@@ -20,103 +20,133 @@ export default class UIManager {
         // Wait, index.html in Step 1 had "Initializing System..." text.
 
         this.dashboardContainer.innerHTML = `
-        <div class="px-4 pt-6 pb-2">
-            <div class="flex items-center justify-between">
-                <h2 class="text-white text-[26px] font-bold leading-tight">Optimization Result</h2>
-                <span id="status-badge" class="px-3 py-1 rounded-full bg-gray-500/20 text-gray-400 text-xs font-bold uppercase tracking-wider border border-gray-500/30">Ready</span>
-            </div>
-            <p class="text-gray-400 text-sm mt-1">Comparing current vs. AI optimized lineup</p>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4 p-4">
-            <!-- Win Probability -->
-            <div class="flex flex-col gap-1 rounded-xl p-5 bg-surface-dark border border-white/5 relative overflow-hidden group">
-                 <div class="flex items-center gap-2 mb-2">
-                    <div class="w-1 h-4 bg-accent-orange rounded-full"></div>
-                    <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">Win Prob</p>
-                </div>
-                <div class="flex items-end gap-2">
-                    <p id="stat-win-rate" class="text-white text-3xl font-bold leading-none">--%</p>
-                </div>
-            </div>
-            <!-- Expected Runs -->
-            <div class="flex flex-col gap-1 rounded-xl p-5 bg-surface-dark border border-white/5 relative overflow-hidden group">
-                 <div class="flex items-center gap-2 mb-2">
-                    <div class="w-1 h-4 bg-primary rounded-full"></div>
-                    <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">Exp. Runs</p>
-                </div>
-                <div class="flex items-end gap-2">
-                    <p id="stat-exp-runs" class="text-white text-3xl font-bold leading-none">--</p>
-                    <span class="text-gray-400 text-sm font-medium mb-1">Runs</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="h-6 w-full"></div>
-
-        <!-- Lineup List -->
-        <div class="flex flex-col gap-2 px-4 pb-4">
-            <h3 class="text-white text-sm font-bold uppercase tracking-wider mb-2 ml-1">Batting Order (1-9)</h3>
-            <div id="batting-order-list" class="flex flex-col gap-2"></div>
-        </div>
-
-        <!-- Field Visualizer -->
-        <div class="px-4 py-2">
-            <h3 class="text-white text-sm font-bold uppercase tracking-wider mb-2 ml-1">Field View</h3>
-            <div class="field-container">
-                 <!-- Field will be injected here -->
-            </div>
-        </div>
-        
-        <!-- Live Sub Simulator Section -->
-        <div class="px-4 py-4 mt-4 border-t border-white/5">
-            <h3 class="text-white text-sm font-bold uppercase tracking-wider mb-3 ml-1">Live Sub Simulation</h3>
-            <div class="bg-surface-dark rounded-xl p-4 border border-white/5">
-                <div class="grid grid-cols-2 gap-3 mb-4">
+        <div class="flex flex-col md:flex-row md:items-start md:gap-8 px-4 pt-6 pb-2">
+            <!-- Header Section Container -->
+            <div class="w-full">
+                <!-- Header Title & Desktop Actions -->
+                <div class="flex items-center justify-between mb-4 md:mb-6">
                     <div>
-                        <label class="text-[10px] text-gray-400 uppercase font-bold">Inning</label>
-                        <select id="live-inning" class="w-full bg-background-dark text-white text-sm rounded p-2 border border-white/10">
-                            <option value="7">7th</option>
-                            <option value="8">8th</option>
-                            <option value="9">9th</option>
-                        </select>
+                        <div class="flex items-center gap-3">
+                            <h2 class="text-white text-[26px] font-bold leading-tight">Optimization Result</h2>
+                            <span id="status-badge" class="px-3 py-1 rounded-full bg-gray-500/20 text-gray-400 text-xs font-bold uppercase tracking-wider border border-gray-500/30">Ready</span>
+                        </div>
+                        <p class="text-gray-400 text-sm mt-1">Comparing current vs. AI optimized lineup</p>
                     </div>
-                    <div>
-                        <label class="text-[10px] text-gray-400 uppercase font-bold">Outs</label>
-                        <select id="live-outs" class="w-full bg-background-dark text-white text-sm rounded p-2 border border-white/10">
-                            <option value="0">0 Out</option>
-                            <option value="1">1 Out</option>
-                            <option value="2">2 Out</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="mb-4">
-                    <label class="text-[10px] text-gray-400 uppercase font-bold mb-1 block">Runners</label>
-                    <div class="flex gap-2">
-                        <label class="flex items-center gap-2 bg-background-dark p-2 rounded border border-white/10 flex-1 justify-center cursor-pointer hover:bg-white/5">
-                            <input type="checkbox" id="live-base-1" class="rounded bg-surface-dark border-gray-600 text-accent-orange focus:ring-accent-orange">
-                            <span class="text-sm text-white">1B</span>
-                        </label>
-                        <label class="flex items-center gap-2 bg-background-dark p-2 rounded border border-white/10 flex-1 justify-center cursor-pointer hover:bg-white/5">
-                            <input type="checkbox" id="live-base-2" class="rounded bg-surface-dark border-gray-600 text-accent-orange focus:ring-accent-orange">
-                            <span class="text-sm text-white">2B</span>
-                        </label>
-                        <label class="flex items-center gap-2 bg-background-dark p-2 rounded border border-white/10 flex-1 justify-center cursor-pointer hover:bg-white/5">
-                            <input type="checkbox" id="live-base-3" class="rounded bg-surface-dark border-gray-600 text-accent-orange focus:ring-accent-orange">
-                            <span class="text-sm text-white">3B</span>
-                        </label>
+                    
+                    <!-- Desktop Action Buttons -->
+                    <div class="hidden md:flex gap-3">
+                         <button id="btn-rerun" class="bg-surface-dark hover:bg-surface-darker text-white font-bold py-2 px-6 rounded-xl border border-white/10 transition-colors flex items-center justify-center gap-2 cursor-pointer">
+                            <span class="material-symbols-outlined text-[20px]">refresh</span>
+                            Rerun
+                        </button>
+                        <button id="btn-apply" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-6 rounded-xl shadow-lg shadow-primary/20 transition-colors flex items-center justify-center gap-2 cursor-pointer">
+                            <span class="material-symbols-outlined text-[20px]">check</span>
+                            Apply
+                        </button>
                     </div>
                 </div>
 
-                <button id="btn-live-sim" class="w-full bg-accent-orange hover:bg-orange-600 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
-                    <span class="material-symbols-outlined">play_arrow</span>
-                    Simulate Scenario
-                </button>
-                
-                <div id="live-result" class="mt-3 p-3 bg-background-dark rounded border border-white/5 hidden">
-                    <p class="text-gray-400 text-xs text-center mb-1">Win Probability Added</p>
-                    <p class="text-white text-xl font-bold result-text text-center">+ --%</p>
+                <!-- Desktop Grid Layout -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    
+                    <!-- Left Column: Lineup List (lg:col-span-5) -->
+                    <div class="lg:col-span-5 flex flex-col gap-4 order-2 lg:order-1">
+                         <div class="flex flex-col gap-2">
+                            <h3 class="text-white text-sm font-bold uppercase tracking-wider mb-2 ml-1">Batting Order (1-9)</h3>
+                            <div id="batting-order-list" class="flex flex-col gap-2 max-h-[800px] overflow-y-auto pr-1"></div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Stats & Field & Live Sim (lg:col-span-7) -->
+                    <div class="lg:col-span-7 flex flex-col gap-6 order-1 lg:order-2">
+                        
+                        <!-- Stats Cards -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Win Probability -->
+                            <div class="flex flex-col gap-1 rounded-xl p-5 bg-surface-dark border border-white/5 relative overflow-hidden group">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <div class="w-1 h-4 bg-accent-orange rounded-full"></div>
+                                    <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">Win Prob</p>
+                                </div>
+                                <div class="flex items-end gap-2">
+                                    <p id="stat-win-rate" class="text-white text-3xl font-bold leading-none">--%</p>
+                                </div>
+                            </div>
+                            <!-- Expected Runs -->
+                            <div class="flex flex-col gap-1 rounded-xl p-5 bg-surface-dark border border-white/5 relative overflow-hidden group">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <div class="w-1 h-4 bg-primary rounded-full"></div>
+                                    <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">Exp. Runs</p>
+                                </div>
+                                <div class="flex items-end gap-2">
+                                    <p id="stat-exp-runs" class="text-white text-3xl font-bold leading-none">--</p>
+                                    <span class="text-gray-400 text-sm font-medium mb-1">Runs</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Field Visualizer -->
+                        <div>
+                            <h3 class="text-white text-sm font-bold uppercase tracking-wider mb-2 ml-1">Field View</h3>
+                            <div class="field-container">
+                                <!-- Field will be injected here -->
+                            </div>
+                        </div>
+
+                         <!-- Live Sub Simulator Section -->
+                        <div class="border-t border-white/5 pt-4">
+                            <h3 class="text-white text-sm font-bold uppercase tracking-wider mb-3 ml-1">Live Sub Simulation</h3>
+                            <div class="bg-surface-dark rounded-xl p-4 border border-white/5">
+                                <div class="grid grid-cols-2 gap-3 mb-4">
+                                    <div>
+                                        <label class="text-[10px] text-gray-400 uppercase font-bold">Inning</label>
+                                        <select id="live-inning" class="w-full bg-background-dark text-white text-sm rounded p-2 border border-white/10">
+                                            <option value="7">7th</option>
+                                            <option value="8">8th</option>
+                                            <option value="9">9th</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] text-gray-400 uppercase font-bold">Outs</label>
+                                        <select id="live-outs" class="w-full bg-background-dark text-white text-sm rounded p-2 border border-white/10">
+                                            <option value="0">0 Out</option>
+                                            <option value="1">1 Out</option>
+                                            <option value="2">2 Out</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="text-[10px] text-gray-400 uppercase font-bold mb-1 block">Runners</label>
+                                    <div class="flex gap-2">
+                                        <label class="flex items-center gap-2 bg-background-dark p-2 rounded border border-white/10 flex-1 justify-center cursor-pointer hover:bg-white/5">
+                                            <input type="checkbox" id="live-base-1" class="rounded bg-surface-dark border-gray-600 text-accent-orange focus:ring-accent-orange">
+                                            <span class="text-sm text-white">1B</span>
+                                        </label>
+                                        <label class="flex items-center gap-2 bg-background-dark p-2 rounded border border-white/10 flex-1 justify-center cursor-pointer hover:bg-white/5">
+                                            <input type="checkbox" id="live-base-2" class="rounded bg-surface-dark border-gray-600 text-accent-orange focus:ring-accent-orange">
+                                            <span class="text-sm text-white">2B</span>
+                                        </label>
+                                        <label class="flex items-center gap-2 bg-background-dark p-2 rounded border border-white/10 flex-1 justify-center cursor-pointer hover:bg-white/5">
+                                            <input type="checkbox" id="live-base-3" class="rounded bg-surface-dark border-gray-600 text-accent-orange focus:ring-accent-orange">
+                                            <span class="text-sm text-white">3B</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <button id="btn-live-sim" class="w-full bg-accent-orange hover:bg-orange-600 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+                                    <span class="material-symbols-outlined">play_arrow</span>
+                                    Simulate Scenario
+                                </button>
+                                
+                                <div id="live-result" class="mt-3 p-3 bg-background-dark rounded border border-white/5 hidden">
+                                    <p class="text-gray-400 text-xs text-center mb-1">Win Probability Added</p>
+                                    <p class="text-white text-xl font-bold result-text text-center">+ --%</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>

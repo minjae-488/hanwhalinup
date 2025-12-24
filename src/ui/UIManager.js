@@ -1,6 +1,20 @@
 export default class UIManager {
     constructor() {
-        this.dashboardContainer = document.getElementById('dashboard-view');
+        this.dashboardContainer = document.getElementById('dashboard-container');
+        // Inject Styles for Animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes flash-orange {
+                0% { background-color: #f37321; transform: scale(1.02); opacity: 1; }
+                50% { background-color: rgba(243, 115, 33, 0.4); transform: scale(1.0); }
+                100% { background-color: transparent; opacity: 1; }
+            }
+            .animate-flash-orange {
+                animation: flash-orange 0.6s ease-out;
+            }
+        `;
+        document.head.appendChild(style);
+
         // Initial HTML template inject
         this.initDashboard();
 

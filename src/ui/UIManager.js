@@ -5,12 +5,12 @@ export default class UIManager {
         const style = document.createElement('style');
         style.textContent = `
             @keyframes flash-orange {
-                0% { background-color: #f37321; transform: scale(1.02); opacity: 1; }
-                50% { background-color: rgba(243, 115, 33, 0.4); transform: scale(1.0); }
-                100% { background-color: transparent; opacity: 1; }
+                0% { background-color: rgba(243, 115, 33, 0.8); transform: scale(1.01); }
+                50% { background-color: rgba(243, 115, 33, 0.3); transform: scale(1.0); }
+                100% { background-color: transparent; }
             }
             .animate-flash-orange {
-                animation: flash-orange 0.6s ease-out;
+                animation: flash-orange 0.5s ease-out;
             }
         `;
         document.head.appendChild(style);
@@ -432,8 +432,8 @@ export default class UIManager {
             let baseClasses = `flex items-center gap-4 p-3 rounded-lg border-l-4 transition-all duration-300 cursor-grab active:cursor-grabbing hover:bg-white/5 min-h-[5.5rem] relative overflow-hidden select-none`;
 
             if (isEmpty) {
-                // Dimmed Empty Slot
-                card.className = `${baseClasses} bg-surface-darker border-gray-700 border-dashed opacity-50 hover:opacity-100`;
+                // Dimmed Empty Slot (Opacity 0.3 as requested)
+                card.className = `${baseClasses} bg-surface-darker border-gray-700 border-dashed opacity-30 hover:opacity-100`;
             } else {
                 // Active Card
                 card.className = `${baseClasses} bg-surface-dark ${isHighlight ? 'border-accent-orange' : 'border-transparent'}`;

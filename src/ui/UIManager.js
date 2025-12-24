@@ -282,7 +282,7 @@ export default class UIManager {
             card.addEventListener('dragstart', (e) => {
                 e.dataTransfer.setData('player-id', player.id); // Custom type
                 e.dataTransfer.setData('source', 'roster');
-                e.dataTransfer.effectAllowed = 'copy';
+                e.dataTransfer.effectAllowed = 'move';
                 card.classList.add('opacity-50');
             });
             card.addEventListener('dragend', () => card.classList.remove('opacity-50'));

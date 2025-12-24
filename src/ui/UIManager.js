@@ -334,8 +334,8 @@ export default class UIManager {
 
         const positions = ['P', 'C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF'];
 
-        // Helper to find player by position
-        const getPlayerByPos = (pos) => lineup.players.find(p => p.position === pos);
+        // Helper to find player by position - with null safety
+        const getPlayerByPos = (pos) => lineup.players.find(p => p && p.position === pos);
 
         positions.forEach(pos => {
             const player = getPlayerByPos(pos);

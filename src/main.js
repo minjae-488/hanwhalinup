@@ -71,14 +71,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     };
 
-    // RERUN Handler
-    const handleRerun = async () => {
-        ui.setLoading(true);
-        // Disable buttons
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(b => b.disabled = true);
+    const handleSimulation = async () => {
+        // Validation: Check for 9 players
+        const validPlayers = currentLineup.players.filter(p => !!p);
+        if (validPlayers.length !== 9) {
+            alert(`라인업 오류: 선수가 부족합니다!\n현재 ${validPlayers.length}명 / 9명이 배정되었습니다.\n빈 슬롯을 모두 채워주세요.`);
+            return;
+        }
 
-        // Run Optimization (Genetic Algorithm)
+        ui.setLoading(true);
+
+        // Use setTimeout to allow UI to update (show loading)
         setTimeout(async () => {
             try {
                 const optimizer = new Optimizer(currentLineup);

@@ -27,21 +27,17 @@ export default class UIManager {
                 <div class="flex items-center justify-between mb-4 md:mb-6">
                     <div>
                         <div class="flex items-center gap-3">
-                            <h2 class="text-white text-[26px] font-bold leading-tight">분석 결과</h2>
-                            <span id="status-badge" class="px-3 py-1 rounded-full bg-gray-500/20 text-gray-400 text-xs font-bold uppercase tracking-wider border border-gray-500/30">준비됨</span>
+                            <h2 class="text-white text-[26px] font-bold leading-tight">라인업 시뮬레이터</h2>
+                            <span id="status-badge" class="px-3 py-1 rounded-full bg-gray-500/20 text-gray-400 text-xs font-bold uppercase tracking-wider border border-gray-500/30">대기 중</span>
                         </div>
-                        <p class="text-gray-400 text-sm mt-1">현재 라인업 vs AI 최적화 라인업 비교</p>
+                        <p class="text-gray-400 text-sm mt-1">나만의 라인업을 만들고 예상 득점력을 확인하세요</p>
                     </div>
                     
                     <!-- Desktop Action Buttons -->
                     <div class="hidden md:flex gap-3">
-                         <button id="btn-rerun" class="bg-surface-dark hover:bg-surface-darker text-white font-bold py-2 px-6 rounded-xl border border-white/10 transition-colors flex items-center justify-center gap-2 cursor-pointer">
-                            <span class="material-symbols-outlined text-[20px]">refresh</span>
-                            다시 실행
-                        </button>
-                        <button id="btn-apply" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-6 rounded-xl shadow-lg shadow-primary/20 transition-colors flex items-center justify-center gap-2 cursor-pointer">
-                            <span class="material-symbols-outlined text-[20px]">check</span>
-                            적용하기
+                         <button id="btn-rerun" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-6 rounded-xl shadow-lg shadow-primary/20 transition-colors flex items-center justify-center gap-2 cursor-pointer w-full md:w-auto">
+                            <span class="material-symbols-outlined text-[20px]">play_arrow</span>
+                            분석 실행
                         </button>
                     </div>
                 </div>
@@ -50,10 +46,10 @@ export default class UIManager {
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     
                     <!-- LEFT COLUMN (NEW): Roster Pool (lg:col-span-3) -->
-                    <div class="lg:col-span-3 flex flex-col gap-4 order-3 lg:order-1 bg-surface-dark rounded-xl p-4 border border-white/5 h-[800px] overflow-hidden">
+                    <div class="lg:col-span-3 flex flex-col gap-4 order-3 lg:order-1 bg-surface-dark rounded-xl p-4 border border-white/5 h-[800px] overflow-hidden drop-zone-roster transition-colors">
                         <div class="flex items-center justify-between">
                             <h3 class="text-white text-sm font-bold uppercase tracking-wider">선수단</h3>
-                             <span class="text-[10px] text-gray-500">드래그하여 교체</span>
+                             <span class="text-[10px] text-gray-500">드래그하여 라인업 수정</span>
                         </div>
                         
                         <!-- Filters -->
@@ -182,6 +178,36 @@ export default class UIManager {
 
         // Init Filters
         this.setupFilters();
+        this.setupRosterDropZone();
+    }
+
+    setupRosterDropZone() {
+        const rosterZone = this.dashboardContainer.querySelector('.drop-zone-roster');
+        if (!rosterZone) return;
+
+        rosterZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            rosterZone.classList.add('border-accent-orange', 'bg-white/5');
+        });
+
+        rosterZone.addEventListener('dragleave', () => {
+            rosterZone.classList.remove('border-accent-orange', 'bg-white/5');
+        });
+
+        rosterZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            rosterZone.classList.remove('border-accent-orange', 'bg-white/5');
+
+            const source = e.dataTransfer.getData('source');
+            if (source === 'lineup') {
+                const index = parseInt(e.dataTransfer.getData('index'));
+                // Player dragged FROM lineup TO roster pool -> Remove from Lineup
+                if (this.onPlayerRemove) {
+                    this.onPlayerRemove(index);
+                }
+            }
+        });
     }
 
     setupFilters() {
@@ -256,12 +282,10 @@ export default class UIManager {
     }
 
     renderResults(data) {
-        // data = { currentRun, optimizedRun, winRate }
-        const diff = (data.optimizedRun - data.currentRun).toFixed(2);
-        const sign = diff >= 0 ? '+' : '';
-
-        this.winRateEl.innerText = `${data.winRate}%`; // Dummy winrate for now
-        this.expRunsEl.innerHTML = `${data.optimizedRun.toFixed(2)} <span class="text-green-500 text-sm">(${sign}${diff})</span>`;
+        // data = { currentRun (avg runs), winRate }
+        // Simplified presentation: Just show the simulated stats
+        this.winRateEl.innerText = `${data.winRate}%`;
+        this.expRunsEl.innerHTML = `${data.currentRun.toFixed(2)} <span class="text-gray-400 text-sm">점</span>`;
     }
 
     renderField(lineup) {

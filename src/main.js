@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (btnLiveSim) {
         btnLiveSim.addEventListener('click', async () => {
             const btnOriginalText = btnLiveSim.innerHTML;
-            btnLiveSim.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Simulating...';
+            btnLiveSim.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> 시뮬레이션 중...';
             btnLiveSim.disabled = true;
 
             setTimeout(() => {

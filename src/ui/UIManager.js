@@ -248,10 +248,10 @@ export default class UIManager {
     setLoading(isLoading) {
         if (isLoading) {
             this.statusBadge.className = "px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-400 text-xs font-bold uppercase tracking-wider border border-yellow-500/30 animate-pulse";
-            this.statusBadge.innerText = "Simulating...";
+            this.statusBadge.innerText = "시뮬레이션 중...";
         } else {
             this.statusBadge.className = "px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs font-bold uppercase tracking-wider border border-green-500/30";
-            this.statusBadge.innerText = "Complete";
+            this.statusBadge.innerText = "완료됨";
         }
     }
 

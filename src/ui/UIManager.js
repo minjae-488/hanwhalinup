@@ -435,8 +435,8 @@ export default class UIManager {
                 // Dimmed Empty Slot (Opacity 0.3 as requested)
                 card.className = `${baseClasses} bg-surface-darker border-gray-700 border-dashed opacity-30 hover:opacity-100`;
             } else {
-                // Active Card
-                card.className = `${baseClasses} bg-surface-dark ${isHighlight ? 'border-accent-orange' : 'border-transparent'}`;
+                // Active Card - All positions get orange border
+                card.className = `${baseClasses} bg-surface-dark border-accent-orange`;
 
                 // Trigger Flash if New
                 if (i === flashIndex) {
@@ -474,8 +474,8 @@ export default class UIManager {
 
             card.addEventListener('dragleave', () => {
                 if (!isEmpty) {
-                    card.classList.remove('bg-white/10', 'border-accent-orange');
-                    if (i >= 3) card.classList.add('border-transparent'); // Restore transparency if not top 3
+                    card.classList.remove('bg-white/10');
+                    card.classList.add('border-accent-orange'); // Restore orange border
                 }
                 if (isEmpty) card.style.opacity = '';
             });
@@ -483,8 +483,8 @@ export default class UIManager {
             card.addEventListener('drop', (e) => {
                 e.preventDefault();
                 if (!isEmpty) {
-                    card.classList.remove('bg-white/10', 'border-accent-orange');
-                    if (i >= 3) card.classList.add('border-transparent');
+                    card.classList.remove('bg-white/10');
+                    card.classList.add('border-accent-orange'); // Restore orange border
                 }
                 if (isEmpty) card.style.opacity = '';
 

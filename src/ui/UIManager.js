@@ -27,21 +27,21 @@ export default class UIManager {
                 <div class="flex items-center justify-between mb-4 md:mb-6">
                     <div>
                         <div class="flex items-center gap-3">
-                            <h2 class="text-white text-[26px] font-bold leading-tight">Optimization Result</h2>
-                            <span id="status-badge" class="px-3 py-1 rounded-full bg-gray-500/20 text-gray-400 text-xs font-bold uppercase tracking-wider border border-gray-500/30">Ready</span>
+                            <h2 class="text-white text-[26px] font-bold leading-tight">분석 결과</h2>
+                            <span id="status-badge" class="px-3 py-1 rounded-full bg-gray-500/20 text-gray-400 text-xs font-bold uppercase tracking-wider border border-gray-500/30">준비됨</span>
                         </div>
-                        <p class="text-gray-400 text-sm mt-1">Comparing current vs. AI optimized lineup</p>
+                        <p class="text-gray-400 text-sm mt-1">현재 라인업 vs AI 최적화 라인업 비교</p>
                     </div>
                     
                     <!-- Desktop Action Buttons -->
                     <div class="hidden md:flex gap-3">
                          <button id="btn-rerun" class="bg-surface-dark hover:bg-surface-darker text-white font-bold py-2 px-6 rounded-xl border border-white/10 transition-colors flex items-center justify-center gap-2 cursor-pointer">
                             <span class="material-symbols-outlined text-[20px]">refresh</span>
-                            Rerun
+                            다시 실행
                         </button>
                         <button id="btn-apply" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-6 rounded-xl shadow-lg shadow-primary/20 transition-colors flex items-center justify-center gap-2 cursor-pointer">
                             <span class="material-symbols-outlined text-[20px]">check</span>
-                            Apply
+                            적용하기
                         </button>
                     </div>
                 </div>
@@ -52,17 +52,17 @@ export default class UIManager {
                     <!-- LEFT COLUMN (NEW): Roster Pool (lg:col-span-3) -->
                     <div class="lg:col-span-3 flex flex-col gap-4 order-3 lg:order-1 bg-surface-dark rounded-xl p-4 border border-white/5 h-[800px] overflow-hidden">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-white text-sm font-bold uppercase tracking-wider">Roster</h3>
-                             <span class="text-[10px] text-gray-500">Drag to Swap</span>
+                            <h3 class="text-white text-sm font-bold uppercase tracking-wider">선수단</h3>
+                             <span class="text-[10px] text-gray-500">드래그하여 교체</span>
                         </div>
                         
                         <!-- Filters -->
                         <div class="flex gap-1 flex-wrap">
-                            <button class="filter-btn active text-[10px] uppercase bg-white text-black px-2 py-1 rounded font-bold transition-colors" data-filter="all">All</button>
-                            <button class="filter-btn text-[10px] uppercase bg-surface-darker text-gray-400 hover:text-white px-2 py-1 rounded font-medium border border-white/10 transition-colors" data-filter="Infielder">INF</button>
-                            <button class="filter-btn text-[10px] uppercase bg-surface-darker text-gray-400 hover:text-white px-2 py-1 rounded font-medium border border-white/10 transition-colors" data-filter="Outfielder">OF</button>
-                            <button class="filter-btn text-[10px] uppercase bg-surface-darker text-gray-400 hover:text-white px-2 py-1 rounded font-medium border border-white/10 transition-colors" data-filter="Catcher">C</button>
-                             <button class="filter-btn text-[10px] uppercase bg-surface-darker text-gray-400 hover:text-white px-2 py-1 rounded font-medium border border-white/10 transition-colors" data-filter="Pitcher">P</button>
+                            <button class="filter-btn active text-[10px] uppercase bg-white text-black px-2 py-1 rounded font-bold transition-colors" data-filter="all">전체</button>
+                            <button class="filter-btn text-[10px] uppercase bg-surface-darker text-gray-400 hover:text-white px-2 py-1 rounded font-medium border border-white/10 transition-colors" data-filter="내야수">내야</button>
+                            <button class="filter-btn text-[10px] uppercase bg-surface-darker text-gray-400 hover:text-white px-2 py-1 rounded font-medium border border-white/10 transition-colors" data-filter="외야수">외야</button>
+                            <button class="filter-btn text-[10px] uppercase bg-surface-darker text-gray-400 hover:text-white px-2 py-1 rounded font-medium border border-white/10 transition-colors" data-filter="포수">포수</button>
+                             <button class="filter-btn text-[10px] uppercase bg-surface-darker text-gray-400 hover:text-white px-2 py-1 rounded font-medium border border-white/10 transition-colors" data-filter="투수">투수</button>
                         </div>
 
                         <div id="roster-pool-list" class="flex flex-col gap-2 overflow-y-auto custom-scrollbar flex-1 pb-4">
@@ -73,7 +73,7 @@ export default class UIManager {
                     <!-- CENTER COLUMN: Lineup List (lg:col-span-4) -->
                     <div class="lg:col-span-4 flex flex-col gap-4 order-2 lg:order-2">
                          <div class="flex flex-col gap-2">
-                            <h3 class="text-white text-sm font-bold uppercase tracking-wider mb-2 ml-1">Batting Order (1-9)</h3>
+                            <h3 class="text-white text-sm font-bold uppercase tracking-wider mb-2 ml-1">타순 (1-9번)</h3>
                             <div id="batting-order-list" class="flex flex-col gap-2 max-h-[800px] overflow-y-auto pr-1"></div>
                         </div>
                     </div>
@@ -87,7 +87,7 @@ export default class UIManager {
                             <div class="flex flex-col gap-1 rounded-xl p-5 bg-surface-dark border border-white/5 relative overflow-hidden group">
                                 <div class="flex items-center gap-2 mb-2">
                                     <div class="w-1 h-4 bg-accent-orange rounded-full"></div>
-                                    <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">Win Prob</p>
+                                    <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">승리 확률</p>
                                 </div>
                                 <div class="flex items-end gap-2">
                                     <p id="stat-win-rate" class="text-white text-3xl font-bold leading-none">--%</p>
@@ -97,18 +97,18 @@ export default class UIManager {
                             <div class="flex flex-col gap-1 rounded-xl p-5 bg-surface-dark border border-white/5 relative overflow-hidden group">
                                 <div class="flex items-center gap-2 mb-2">
                                     <div class="w-1 h-4 bg-primary rounded-full"></div>
-                                    <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">Exp. Runs</p>
+                                    <p class="text-gray-400 text-xs font-medium uppercase tracking-wider">기대 득점</p>
                                 </div>
                                 <div class="flex items-end gap-2">
                                     <p id="stat-exp-runs" class="text-white text-3xl font-bold leading-none">--</p>
-                                    <span class="text-gray-400 text-sm font-medium mb-1">Runs</span>
+                                    <span class="text-gray-400 text-sm font-medium mb-1">점</span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Field Visualizer -->
                         <div>
-                            <h3 class="text-white text-sm font-bold uppercase tracking-wider mb-2 ml-1">Field View</h3>
+                            <h3 class="text-white text-sm font-bold uppercase tracking-wider mb-2 ml-1">수비 위치</h3>
                             <div class="field-container">
                                 <!-- Field will be injected here -->
                             </div>
@@ -116,52 +116,52 @@ export default class UIManager {
 
                          <!-- Live Sub Simulator Section -->
                         <div class="border-t border-white/5 pt-4">
-                            <h3 class="text-white text-sm font-bold uppercase tracking-wider mb-3 ml-1">Live Sub Simulation</h3>
+                            <h3 class="text-white text-sm font-bold uppercase tracking-wider mb-3 ml-1">실시간 대타 시뮬레이션</h3>
                             <div class="bg-surface-dark rounded-xl p-4 border border-white/5">
                                 <div class="grid grid-cols-2 gap-3 mb-4">
                                     <div>
-                                        <label class="text-[10px] text-gray-400 uppercase font-bold">Inning</label>
+                                        <label class="text-[10px] text-gray-400 uppercase font-bold">이닝</label>
                                         <select id="live-inning" class="w-full bg-background-dark text-white text-sm rounded p-2 border border-white/10">
-                                            <option value="7">7th</option>
-                                            <option value="8">8th</option>
-                                            <option value="9">9th</option>
+                                            <option value="7">7회</option>
+                                            <option value="8">8회</option>
+                                            <option value="9">9회</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="text-[10px] text-gray-400 uppercase font-bold">Outs</label>
+                                        <label class="text-[10px] text-gray-400 uppercase font-bold">아웃 카운트</label>
                                         <select id="live-outs" class="w-full bg-background-dark text-white text-sm rounded p-2 border border-white/10">
-                                            <option value="0">0 Out</option>
-                                            <option value="1">1 Out</option>
-                                            <option value="2">2 Out</option>
+                                            <option value="0">무사</option>
+                                            <option value="1">1사</option>
+                                            <option value="2">2사</option>
                                         </select>
                                     </div>
                                 </div>
                                 
                                 <div class="mb-4">
-                                    <label class="text-[10px] text-gray-400 uppercase font-bold mb-1 block">Runners</label>
+                                    <label class="text-[10px] text-gray-400 uppercase font-bold mb-1 block">주자 상황</label>
                                     <div class="flex gap-2">
                                         <label class="flex items-center gap-2 bg-background-dark p-2 rounded border border-white/10 flex-1 justify-center cursor-pointer hover:bg-white/5">
                                             <input type="checkbox" id="live-base-1" class="rounded bg-surface-dark border-gray-600 text-accent-orange focus:ring-accent-orange">
-                                            <span class="text-sm text-white">1B</span>
+                                            <span class="text-sm text-white">1루</span>
                                         </label>
                                         <label class="flex items-center gap-2 bg-background-dark p-2 rounded border border-white/10 flex-1 justify-center cursor-pointer hover:bg-white/5">
                                             <input type="checkbox" id="live-base-2" class="rounded bg-surface-dark border-gray-600 text-accent-orange focus:ring-accent-orange">
-                                            <span class="text-sm text-white">2B</span>
+                                            <span class="text-sm text-white">2루</span>
                                         </label>
                                         <label class="flex items-center gap-2 bg-background-dark p-2 rounded border border-white/10 flex-1 justify-center cursor-pointer hover:bg-white/5">
                                             <input type="checkbox" id="live-base-3" class="rounded bg-surface-dark border-gray-600 text-accent-orange focus:ring-accent-orange">
-                                            <span class="text-sm text-white">3B</span>
+                                            <span class="text-sm text-white">3루</span>
                                         </label>
                                     </div>
                                 </div>
 
                                 <button id="btn-live-sim" class="w-full bg-accent-orange hover:bg-orange-600 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
                                     <span class="material-symbols-outlined">play_arrow</span>
-                                    Simulate Scenario
+                                    상황 시뮬레이션
                                 </button>
                                 
                                 <div id="live-result" class="mt-3 p-3 bg-background-dark rounded border border-white/5 hidden">
-                                    <p class="text-gray-400 text-xs text-center mb-1">Win Probability Added</p>
+                                    <p class="text-gray-400 text-xs text-center mb-1">기대 승률 상승폭</p>
                                     <p class="text-white text-xl font-bold result-text text-center">+ --%</p>
                                 </div>
                             </div>
@@ -425,7 +425,7 @@ export default class UIManager {
                         <h4 class="text-white font-bold text-sm truncate">${player.name}</h4>
                         <span class="px-1.5 py-0.5 rounded bg-white/10 text-xs text-white/80 font-medium">${player.position}</span>
                     </div>
-                    <p class="text-gray-400 text-xs">${player.hand === 'R' ? 'Right' : player.hand === 'L' ? 'Left' : 'Switch'} • Avg ${player.stats.avg.toFixed(3)}</p>
+                    <p class="text-gray-400 text-xs">${player.hand === 'R' ? '우타' : player.hand === 'L' ? '좌타' : '양타'} • 타율 ${player.stats.avg.toFixed(3)}</p>
                 </div>
                  <div class="text-right">
                     <p class="text-primary font-bold text-sm">--</p>

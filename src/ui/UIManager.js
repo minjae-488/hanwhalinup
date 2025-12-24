@@ -275,7 +275,7 @@ export default class UIManager {
         filtered.forEach(player => {
             const card = document.createElement('div');
             card.draggable = true;
-            card.className = "flex items-center gap-3 bg-surface-darker p-2 rounded-lg border border-white/5 hover:border-accent-orange cursor-grab active:cursor-grabbing transition-colors group";
+            card.className = "flex items-center gap-3 bg-surface-darker p-2 rounded-lg border border-white/5 hover:border-accent-orange cursor-grab active:cursor-grabbing transition-colors group select-none";
             card.dataset.playerId = player.id;
 
             // Drag Events
@@ -419,7 +419,7 @@ export default class UIManager {
             const card = document.createElement('div');
 
             // Base layout logic
-            let baseClasses = `flex items-center gap-4 p-3 rounded-lg border-l-4 transition-all duration-300 cursor-grab active:cursor-grabbing hover:bg-white/5 min-h-[5.5rem] relative overflow-hidden`;
+            let baseClasses = `flex items-center gap-4 p-3 rounded-lg border-l-4 transition-all duration-300 cursor-grab active:cursor-grabbing hover:bg-white/5 min-h-[5.5rem] relative overflow-hidden select-none`;
 
             if (isEmpty) {
                 // Dimmed Empty Slot

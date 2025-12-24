@@ -464,8 +464,9 @@ export default class UIManager {
                     <div class="flex flex-col items-center justify-center w-6">
                         <span class="text-gray-600 text-xs font-bold">${i + 1}</span>
                     </div>
-                    <div class="flex-1 text-center py-2">
-                        <span class="text-gray-600 text-xs font-bold uppercase tracking-wider">빈 슬롯 (드래그하여 추가)</span>
+                    <div class="flex-1 text-center py-3 border-2 border-dashed border-gray-700 rounded-lg bg-black/20 flex items-center justify-center gap-2 group-hover:border-gray-500 transition-colors">
+                        <span class="material-symbols-outlined text-gray-600 group-hover:text-gray-400">add_circle</span>
+                        <span class="text-gray-600 text-xs font-bold group-hover:text-gray-400">선수 미배정 (드래그)</span>
                     </div>
                 `;
             } else {

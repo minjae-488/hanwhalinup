@@ -402,79 +402,49 @@ export default class UIManager {
         // Let's do a simple Bar Comparison since we only have aggregate data in main.js currently.
 
         // Find chart container
-        // We will repurpose the 'Charts Section' from the design or main dashboard
-        // Currently, we don't have a specific container id for chart in initDashboard, 
-        // let's assume we want to inject it below the stats.
-    }
-
-    renderLineup(lineup, type) {
-        // Render Field View as well whenever lineup updates
-        this.renderField(lineup);
-
-        this.lineupContainer.innerHTML = '';
-
-        // Ensure we always render 9 slots, even if empty
-        const slots = 9;
-
-        for (let i = 0; i < slots; i++) {
-            const player = lineup.players[i];
-            const isHighlight = i < 3;
-
-            const card = document.createElement('div');
-            // If empty slot, different styling
-            const isEmpty = !player;
-
-            card.className = `flex items-center gap-4 p-3 rounded-lg border-l-4 transition-colors cursor-grab active:cursor-grabbing hover:bg-white/5 min-h-[5.5rem] ${isEmpty ? 'bg-surface-darker border-gray-700 border-dashed' : 'bg-surface-dark ' + (isHighlight ? 'border-accent-orange' : 'border-transparent')}`;
-
-            card.draggable = true;
-            card.dataset.index = i; // Slot index
-
-            // Drag Events
-            card.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('index', i);
-                e.dataTransfer.setData('source', 'lineup');
-                if (!isEmpty) {
-                    e.dataTransfer.setData('player-id', player.id); // Also allow moving back to roster? 
-                }
-                e.dataTransfer.effectAllowed = 'move';
-                setTimeout(() => card.classList.add('opacity-50'), 0);
-            });
+        e.dataTransfer.setData('source', 'lineup');
+        if (!isEmpty) {
+            e.dataTransfer.setData('player-id', player.id); // Also allow moving back to roster? 
+        }
+        e.dataTransfer.effectAllowed = 'move';
+        setTimeout(() => card.classList.add('opacity-50'), 0);
+    });
 
             card.addEventListener('dragend', () => card.classList.remove('opacity-50'));
 
-            card.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'move';
-                card.classList.add('bg-white/10');
-            });
+card.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    card.classList.add('bg-white/10');
+});
 
-            card.addEventListener('dragleave', () => {
-                card.classList.remove('bg-white/10');
-            });
+card.addEventListener('dragleave', () => {
+    card.classList.remove('bg-white/10');
+});
 
-            card.addEventListener('drop', (e) => {
-                e.preventDefault();
-                card.classList.remove('bg-white/10');
+card.addEventListener('drop', (e) => {
+    e.preventDefault();
+    card.classList.remove('bg-white/10');
 
-                const source = e.dataTransfer.getData('source');
+    const source = e.dataTransfer.getData('source');
 
-                if (source === 'lineup') {
-                    const fromIndex = parseInt(e.dataTransfer.getData('index'));
-                    const toIndex = i;
-                    if (fromIndex !== toIndex && this.onLineupReorder) {
-                        this.onLineupReorder(fromIndex, toIndex); // Swap slots
-                    }
-                } else if (source === 'roster') {
-                    const playerId = e.dataTransfer.getData('player-id');
-                    if (this.onPlayerReplace) {
-                        this.onPlayerReplace(i, playerId); // Insert/Replace at slot
-                    }
-                }
-            });
+    if (source === 'lineup') {
+        const fromIndex = parseInt(e.dataTransfer.getData('index'));
+        const toIndex = i;
+        if (fromIndex !== toIndex && this.onLineupReorder) {
+            this.onLineupReorder(fromIndex, toIndex); // Swap slots
+        }
+    } else if (source === 'roster') {
+        const playerId = e.dataTransfer.getData('player-id');
+        if (this.onPlayerReplace) {
+            this.onPlayerReplace(i, playerId); // Insert/Replace at slot
+        }
+    }
+});
 
-            // If empty
-            if (isEmpty) {
-                card.innerHTML = `
+// If empty
+if (isEmpty) {
+    card.innerHTML = `
                     <div class="flex flex-col items-center justify-center w-6">
                         <span class="text-gray-600 text-xs font-bold">${i + 1}</span>
                     </div>
@@ -483,8 +453,8 @@ export default class UIManager {
                         <span class="text-gray-600 text-xs font-bold group-hover:text-gray-400">선수 미배정 (드래그)</span>
                     </div>
                 `;
-            } else {
-                card.innerHTML = `
+} else {
+    card.innerHTML = `
                     <div class="flex flex-col items-center justify-center w-6">
                         <span class="text-gray-400 text-xs font-bold">${i + 1}</span>
                     </div>
@@ -508,17 +478,17 @@ export default class UIManager {
                     </div>
                 `;
 
-                // Remove Button Logic
-                const removeBtn = card.querySelector('.remove-btn');
-                if (removeBtn) {
-                    removeBtn.addEventListener('click', (e) => {
-                        e.stopPropagation(); // Prevent drag start
-                        if (this.onPlayerRemove) this.onPlayerRemove(i);
-                    });
-                }
-            }
+    // Remove Button Logic
+    const removeBtn = card.querySelector('.remove-btn');
+    if (removeBtn) {
+        removeBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent drag start
+            if (this.onPlayerRemove) this.onPlayerRemove(i);
+        });
+    }
+}
 
-            this.lineupContainer.appendChild(card);
+this.lineupContainer.appendChild(card);
         }
     }
 }
